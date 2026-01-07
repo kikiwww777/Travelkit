@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.mapper.ItemMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.check.pojo.Item">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="trip_id" property="tripId" jdbcType="INTEGER"/>
+        <result column="item_overview_id" property="itemOverviewId" jdbcType="INTEGER"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="priority" property="priority" jdbcType="VARCHAR"/>
+        <result column="checked" property="checked" jdbcType="INTEGER"/>
+        <result column="checked_at" property="checkedAt" jdbcType="TIMESTAMP"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, trip_id, item_overview_id, category_id, name, note, priority, checked, checked_at, created_at, updated_at
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM items
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByTripId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM items
+        WHERE trip_id = #{tripId}
+        ORDER BY priority DESC, created_at ASC
+    </select>
+
+    <select id="selectByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM items
+        WHERE category_id = #{categoryId}
+        ORDER BY priority DESC, created_at ASC
+    </select>
+
+    <select id="selectByCheckedStatus" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM items
+        WHERE trip_id = #{tripId} AND checked = #{checked}
+        ORDER BY priority DESC, created_at ASC
+    </select>
+
+    <insert id="insert" parameterType="com.example.check.pojo.Item" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO items (trip_id, item_overview_id, category_id, name, note, priority, checked, checked_at, created_at, updated_at)
+        VALUES (#{tripId}, #{itemOverviewId}, #{categoryId}, #{name}, #{note}, #{priority}, #{checked}, #{checkedAt}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO items (trip_id, item_overview_id, category_id, name, note, priority, checked, created_at, updated_at)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.tripId}, #{item.itemOverviewId}, #{item.categoryId}, #{item.name}, #{item.note}, #{item.priority}, #{item.checked}, #{item.createdAt}, #{item.updatedAt})
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.example.check.pojo.Item">
+        UPDATE items
+        SET trip_id = #{tripId},
+            item_overview_id = #{itemOverviewId},
+            category_id = #{categoryId},
+            name = #{name},
+            note = #{note},
+            priority = #{priority},
+            checked = #{checked},
+            checked_at = #{checkedAt},
+            updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateCheckedStatus">
+        UPDATE items
+        SET checked = #{checked},
+            checked_at = CASE WHEN #{checked} = 1 THEN NOW() ELSE NULL END,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="resetCheckedStatusByTripId" parameterType="java.lang.Integer">
+        UPDATE items
+        SET checked = 0,
+            checked_at = NULL,
+            updated_at = NOW()
+        WHERE trip_id = #{tripId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM items WHERE id = #{id}
+    </delete>
+
+    <select id="countByTripId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM items WHERE trip_id = #{tripId}
+    </select>
+
+    <select id="countCheckedByTripId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM items WHERE trip_id = #{tripId} AND checked = 1
+    </select>
+
+    <delete id="deleteByItemOverviewId">
+        DELETE FROM items 
+        WHERE trip_id = #{tripId} 
+        AND item_overview_id = #{itemOverviewId}
+    </delete>
+    
+    <select id="selectByItemOverviewId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM items
+        WHERE trip_id = #{tripId} AND item_overview_id = #{itemOverviewId}
+    </select>
+    
+    <select id="selectFilteredItems" resultMap="BaseResultMap">
+        SELECT i.id, i.trip_id, i.item_overview_id, i.category_id, i.name, i.note, i.priority, i.checked, i.checked_at, i.created_at, i.updated_at
+        FROM items i
+        LEFT JOIN item_categories ic ON i.category_id = ic.id
+        LEFT JOIN item_overview io ON i.item_overview_id = io.id
+        WHERE i.trip_id = #{tripId}
+        <if test="categoryCode != null and categoryCode != ''">
+            AND ic.code = #{categoryCode}
+        </if>
+        <if test="checked != null">
+            AND i.checked = #{checked}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (i.name LIKE CONCAT('%', #{keyword}, '%') OR i.note LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY i.priority DESC, i.created_at ASC
+    </select>
+    
+    <delete id="deleteByTripId">
+        DELETE FROM items WHERE trip_id = #{tripId}
+    </delete>
+
+</mapper>

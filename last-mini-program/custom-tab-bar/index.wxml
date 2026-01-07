@@ -1,0 +1,25 @@
+<view class="tab-bar">
+  <view 
+    wx:for="{{list}}" 
+    wx:key="index"
+    class="tab-item"
+    bindtap="switchTab"
+    data-index="{{index}}"
+  >
+    <view class="pill {{selected === index ? 'pill--active' : ''}}">
+      <view 
+        wx:if="{{index === 0}}"
+        class="icon icon-home {{selected === index ? 'icon-active' : ''}}"
+      />
+      <view 
+        wx:elif="{{index === 1}}"
+        class="icon icon-trip {{selected === index ? 'icon-active' : ''}}"
+      />
+      <view 
+        wx:elif="{{index === 2}}"
+        class="icon icon-profile {{selected === index ? 'icon-active' : ''}}"
+      />
+    </view>
+  </view>
+</view>
+

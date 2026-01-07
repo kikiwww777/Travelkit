@@ -1,0 +1,37 @@
+<view class="member-progress">
+  <view class="progress-header">
+    <text class="title">成员完成状态</text>
+    <view class="filter-group">
+      <view class="filter-pill {{filter === 'all' ? 'active' : ''}}" data-value="all" bindtap="onChangeFilter">全部</view>
+      <view class="filter-pill {{filter === 'completed' ? 'active' : ''}}" data-value="completed" bindtap="onChangeFilter">已完成</view>
+      <view class="filter-pill {{filter === 'pending' ? 'active' : ''}}" data-value="pending" bindtap="onChangeFilter">未完成</view>
+    </view>
+  </view>
+  <view wx:if="{{loading}}" class="member-empty">
+    <text>加载中...</text>
+  </view>
+  <block wx:elif="{{members.length === 0}}">
+    <view class="member-empty">
+      <text>暂无成员数据</text>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="member-list">
+      <view class="member-card {{item.completed ? 'completed' : 'pending'}}" wx:for="{{members}}" wx:key="memberId">
+        <view class="member-head">
+          <view class="member-avatar">
+            <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+            <text wx:else>{{item.displayInitial}}</text>
+          </view>
+          <view class="member-meta">
+            <text class="member-name">{{item.memberName || ('成员' + item.name)}}</text>
+            <text class="member-counts">已勾选 {{item.checkedCount || 0}} 项 · 未勾选 {{item.pendingCount || 0}} 项</text>
+          </view>
+          <view class="member-pill {{item.completed ? 'true' : 'false'}}">
+            {{item.completed ? '已完成' : '未完成'}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

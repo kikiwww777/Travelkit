@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.cooperative.mapper.CooperativeInviteMapper">
+
+    <resultMap id="CooperativeInviteResultMap" type="com.example.check.cooperative.pojo.CooperativeInvite">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="trip_id" property="tripId"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="invite_type" property="inviteType"/>
+        <result column="token" property="token"/>
+        <result column="short_code" property="shortCode"/>
+        <result column="share_link" property="shareLink"/>
+        <result column="expired_at" property="expiredAt"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.check.cooperative.pojo.CooperativeInvite" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cooperative_trip_invites
+        (trip_id, created_by, invite_type, token, short_code, share_link, expired_at, created_at)
+        VALUES
+        (#{tripId}, #{createdBy}, #{inviteType}, #{token}, #{shortCode}, #{shareLink}, #{expiredAt}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.check.cooperative.pojo.CooperativeInvite">
+        UPDATE cooperative_trip_invites
+        SET token = #{token},
+            short_code = #{shortCode},
+            share_link = #{shareLink},
+            expired_at = #{expiredAt},
+            created_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="findLatestInvite" parameterType="map" resultMap="CooperativeInviteResultMap">
+        SELECT * FROM cooperative_trip_invites
+        WHERE trip_id = #{tripId}
+          AND invite_type = #{inviteType}
+          AND created_by = #{createdBy}
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
+    <select id="findByTripIdAndInviteType" parameterType="map" resultMap="CooperativeInviteResultMap">
+        SELECT * FROM cooperative_trip_invites
+        WHERE trip_id = #{tripId}
+          AND invite_type = #{inviteType}
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
+    <select id="findByToken" parameterType="java.lang.String" resultMap="CooperativeInviteResultMap">
+        SELECT *
+        FROM cooperative_trip_invites
+        WHERE token = #{token}
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
+    <select id="findByShortCode" parameterType="java.lang.String" resultMap="CooperativeInviteResultMap">
+        SELECT *
+        FROM cooperative_trip_invites
+        WHERE short_code = #{shortCode}
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
+    <delete id="deleteByTripId" parameterType="java.lang.Integer">
+        DELETE FROM cooperative_trip_invites WHERE trip_id = #{tripId}
+    </delete>
+</mapper>

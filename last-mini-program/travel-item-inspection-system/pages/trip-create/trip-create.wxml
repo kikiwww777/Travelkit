@@ -1,0 +1,263 @@
+<!--pages/trip-create/trip-create.wxml-->
+<view class="trip-create-container">
+  <view class="page-header">
+    <text class="page-title">创建新行程</text>
+    <button class="back-btn" size="mini" bindtap="onCancel">返回</button>
+  </view>
+
+  <scroll-view class="form-container" scroll-y="true">
+    <!-- 行程信息表单 -->
+    <view class="form-section">
+      <view class="section-title">行程信息</view>
+      
+      <!-- 第一个目的地框：禁止填写，仅显示已选择的目的地 -->
+      <view class="form-item">
+        <text class="form-label">目的地 *</text>
+        <input 
+          class="form-input" 
+          placeholder="请先查询并选择目的地"
+          value="{{tripForm.destination}}"
+          disabled="{{true}}"
+        />
+        <text wx:if="{{tripForm.destination}}" class="selected-city">已选择：{{tripForm.destination}}</text>
+      </view>
+
+      <!-- 第二个目的地框：可以输入并查询 -->
+      <view class="form-item">
+        <text class="form-label">查询目的地</text>
+        <view class="destination-input">
+          <input 
+            class="form-input" 
+            placeholder="请输入目的地关键词"
+            value="{{cityQuery}}"
+            bindinput="onDestinationInput"
+          />
+          <button class="query-btn" type="primary" size="mini" bindtap="queryCityList">查询目的地</button>
+        </view>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">出行类型 *</text>
+        <picker 
+          mode="selector" 
+          range="{{['旅游', '商务', '探亲', '其他']}}"
+          value="{{typeIndex}}"
+          bindchange="onTypeChange"
+        >
+          <view class="picker-view">
+            {{typeLabel || '请选择出行类型'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">出发日期 *</text>
+        <picker 
+          mode="date" 
+          value="{{tripForm.startDate}}"
+          bindchange="onStartDateChange"
+        >
+          <view class="picker-view">
+            {{tripForm.startDate || '请选择出发日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">返回日期 *</text>
+        <picker 
+          mode="date" 
+          value="{{tripForm.endDate}}"
+          bindchange="onEndDateChange"
+          disabled="{{!tripForm.startDate}}"
+        >
+          <view class="picker-view">
+            {{tripForm.endDate || '请选择返回日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">同行人数</text>
+        <input 
+          class="form-input" 
+          type="number" 
+          value="{{tripForm.travelers}}"
+          bindinput="onTravelersChange"
+          placeholder="请输入同行人数"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">行程描述</text>
+        <textarea 
+          class="form-textarea" 
+          value="{{tripForm.description}}"
+          bindinput="onDescriptionInput"
+          placeholder="简单描述一下这次行程的目的和计划..."
+          maxlength="200"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">特殊需求</text>
+        <textarea 
+          class="form-textarea" 
+          value="{{tripForm.specialNeeds}}"
+          bindinput="onSpecialNeedsInput"
+          placeholder="如：过敏体质、轮椅出行、宠物同行等特殊需求"
+          maxlength="200"
+        />
+      </view>
+    </view>
+
+    <!-- 行程模板选择 -->
+    <view class="form-section template-section">
+      <view class="section-title">📋 选择行程模板（可选）</view>
+      
+      <view class="template-selector">
+        <picker 
+          mode="selector" 
+          range="{{templates}}" 
+          range-key="name"
+          value="{{templateIndex}}"
+          bindchange="handleTemplateChange"
+          disabled="{{templates.length === 0}}"
+        >
+          <view class="picker-view">
+            {{selectedTemplate ? selectedTemplate.name : (templates.length > 0 ? '请选择行程模板' : '暂无可用模板')}}
+          </view>
+        </picker>
+      </view>
+
+      <view wx:if="{{selectedTemplate}}" class="selected-template">
+        <view class="selected-template-header">
+          <text class="template-icon">📋</text>
+          <text class="selected-template-title">已选择模板</text>
+        </view>
+        <text class="selected-template-name">{{selectedTemplate.name}}</text>
+        <text wx:if="{{selectedTemplate.description}}" class="selected-template-desc">{{selectedTemplate.description}}</text>
+        
+        <!-- 模板物品预览 -->
+        <view wx:if="{{loadingTemplateItems}}" class="template-items-loading">
+          <text>加载模板物品中...</text>
+        </view>
+        <view wx:elif="{{templateItems.length > 0}}" class="template-items-preview">
+          <view class="template-items-header">
+            <text class="template-items-count">包含 {{templateItems.length}} 个物品</text>
+          </view>
+          <view class="template-items-list">
+            <view 
+              class="template-item-preview"
+              wx:for="{{templateItemsPreview}}" 
+              wx:key="id"
+            >
+              <text class="item-icon">✓</text>
+              <text class="item-name">{{item.name}}</text>
+            </view>
+            <view wx:if="{{templateItems.length > 10}}" class="template-items-more">
+              还有 {{templateItems.length - 10}} 个物品...
+            </view>
+          </view>
+          <view class="template-items-tip">
+            <text>💡 创建行程后，这些物品将自动添加到物品清单中</text>
+          </view>
+        </view>
+        <view wx:else class="template-items-empty">
+          <text>该模板暂无物品</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 天气预报 -->
+    <view wx:if="{{weatherForecast30d || loadingWeather}}" class="form-section weather-section">
+      <view class="section-title">☁️ 目的地天气</view>
+      <view class="weather-hint">(仅能展示30天内天气)</view>
+      
+      <view wx:if="{{loadingWeather}}" class="weather-loading">
+        <text>加载天气信息中...</text>
+      </view>
+
+      <view wx:elif="{{weatherForecast30d && weatherForecast30d.forecast && weatherForecast30d.forecast.length > 0}}" class="weather-content">
+        <view class="weather-city">{{weatherForecast30d.city}}</view>
+        <view wx:if="{{weatherForecast30d.hasError}}" class="weather-error-tip">
+          <text>⚠️ {{weatherForecast30d.errorMessage}}</text>
+        </view>
+        <scroll-view class="weather-forecast" scroll-x="true">
+          <view class="forecast-list">
+            <view 
+              class="forecast-item {{item.isInTripRange ? 'is-trip-date' : ''}}"
+              wx:for="{{weatherForecast30d.forecast}}" 
+              wx:key="date"
+            >
+              <text class="forecast-date">{{item.formattedDate}}</text>
+              <view class="forecast-info">
+                <view class="forecast-icons">
+                  <image wx:if="{{item.iconDay}}" class="forecast-icon" src="{{item.iconDay}}" mode="aspectFit" />
+                  <image wx:if="{{item.iconNight}}" class="forecast-icon forecast-icon-night" src="{{item.iconNight}}" mode="aspectFit" />
+                </view>
+                <view class="forecast-temp">
+                  <text class="temp-max">{{item.tempMax}}°</text>
+                  <text class="temp-min">/ {{item.tempMin}}°</text>
+                </view>
+                <view class="forecast-text">
+                  <text class="forecast-text-day">{{item.textDay}}</text>
+                  <text wx:if="{{item.textNight && item.textNight !== item.textDay}}" class="forecast-text-night">{{item.textNight}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <view wx:elif="{{weatherError}}" class="weather-error">
+        <text>⚠️ {{weatherError}}</text>
+      </view>
+    </view>
+
+    <button 
+      class="submit-btn" 
+      type="primary" 
+      loading="{{loading}}"
+      bindtap="handleCreate"
+    >
+      创建行程
+    </button>
+  </scroll-view>
+
+  <!-- 城市选择弹窗 -->
+  <view wx:if="{{cityDialogVisible}}" class="city-dialog-mask" bindtap="confirmSelectCity">
+    <view class="city-dialog" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">选择目的地城市</text>
+        <text class="dialog-close" bindtap="confirmSelectCity">×</text>
+      </view>
+      <view class="dialog-content">
+        <view wx:if="{{cityLoading}}" class="loading-state">
+          <text>加载城市列表...</text>
+        </view>
+        <view wx:else>
+          <view 
+            class="city-item {{selectedCityId === item.id ? 'selected' : ''}}" 
+            wx:for="{{cityList}}" 
+            wx:key="id"
+            bindtap="handleSelectCityRow"
+            data-city="{{item}}"
+            data-id="{{item.id}}"
+          >
+            <text class="city-name">{{item.name}}</text>
+            <text class="city-region">{{item.adm2 || item.adm1}} {{item.country}}</text>
+            <text wx:if="{{selectedCityId === item.id}}" class="city-selected-icon">✓</text>
+          </view>
+          <view wx:if="{{cityList.length === 0}}" class="empty-state">
+            <text>暂无数据</text>
+          </view>
+        </view>
+      </view>
+      <view class="dialog-footer">
+        <button class="dialog-btn" bindtap="closeCityDialog">取消</button>
+        <button class="dialog-btn primary" bindtap="confirmSelectCity" disabled="{{!selectedCityId}}">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,53 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/home/home",
+    "pages/trip-list/trip-list",
+    "pages/trip-create/trip-create",
+    "pages/cooperative-trip-list/cooperative-trip-list",
+    "pages/cooperative-trip-create/cooperative-trip-create",
+    "pages/cooperative-checklist/cooperative-checklist",
+    "pages/cooperative-check-process/cooperative-check-process",
+    "pages/trip-templates/trip-templates",
+    "pages/template-item-editor/template-item-editor",
+    "pages/trip-detail/trip-detail",
+    "pages/cooperative-trip-detail/cooperative-trip-detail",
+    "pages/cooperative-join/cooperative-join",
+    "pages/checklist/checklist",
+    "pages/check-process/check-process",
+    "pages/profile/profile",
+    "pages/statistics/statistics",
+    "pages/admin/admin",
+    "pages/agreement/agreement",
+    "pages/privacy/privacy"
+  ],
+  "window": {
+    "navigationBarTitleText": "出行必带",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#7A7E83",
+    "selectedColor": "#667eea",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/trip-list/trip-list",
+        "text": "行程"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

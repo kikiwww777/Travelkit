@@ -1,0 +1,165 @@
+<!--pages/cooperative-trip-list/cooperative-trip-list.wxml-->
+<view class="trip-list-container">
+  <!-- 旅行日志标题 -->
+  <view class="travel-passport-section">
+    <view class="passport-header">
+      <text class="passport-title">合作行程</text>
+      <text class="passport-subtitle">COOPERATIVE PASSPORT</text>
+    </view>
+    <!-- 操作按钮 -->
+    <view class="header-actions">
+      <button class="join-btn" bindtap="goJoinPage">输入邀请码加入</button>
+      <button class="create-btn" bindtap="createTrip">新建行程</button>
+    </view>
+  </view>
+
+  <!-- 搜索和筛选栏 -->
+  <view class="search-filter-bar">
+    <button class="filter-status-btn" bindtap="showStatusFilter">状态</button>
+    <button class="filter-icon-btn" bindtap="showFilter">
+      <text class="filter-icon">▼</text>
+    </button>
+  </view>
+
+  <!-- 行程列表 -->
+  <view class="trip-list">
+    <!-- 有数据时显示行程卡片 -->
+    <block wx:if="{{filteredTrips.length > 0}}">
+      <view 
+        class="trip-card-wrapper {{item.deadlineStatus === 'danger' || item.deadlineStatus === 'warning' ? 'trip-card-wrapper-' + item.deadlineStatus : ''}}" 
+        wx:for="{{filteredTrips}}" 
+        wx:key="id"
+      >
+      <view 
+        class="trip-card-large" 
+        bindtap="viewTrip"
+        data-id="{{item.id}}"
+      >
+      <!-- 大图片区域 -->
+      <view class="trip-image-container">
+        <image 
+          class="trip-image" 
+          src="{{item.img || tripCoverMap[item.id] || '/static/default-trip.jpg'}}" 
+          mode="aspectFill" 
+        />
+        <view class="trip-image-overlay"></view>
+        
+        <!-- 状态徽章 - 左上角 -->
+        <view class="trip-status-badge status-{{item.status}}">
+          <view class="status-dot"></view>
+          <text class="status-text">{{item.statusText}}</text>
+        </view>
+
+        <!-- 合作行程标识 - 左上角，在状态徽章下方 -->
+        <view class="trip-cooperative-badge">
+          <view class="cooperative-icon"></view>
+          <text class="cooperative-text">多人协作</text>
+        </view>
+
+        <!-- 出发日期提醒 - 左上角，在合作行程标识下方 -->
+        <view wx:if="{{item.deadlineStatus === 'danger' || item.deadlineStatus === 'warning'}}" class="trip-deadline-badge deadline-{{item.deadlineStatus}}">
+          <view class="deadline-icon deadline-icon-{{item.deadlineStatus}}"></view>
+          <text class="deadline-text">{{item.deadlineStatus === 'danger' ? '仅剩1天' : '还有' + item.deadlineDays + '天'}}</text>
+        </view>
+
+        <!-- 删除按钮 - 右上角（仅创建者可见） -->
+        <button 
+          wx:if="{{item.creatorId === currentUserId}}"
+          class="trip-delete-btn" 
+          catchtap="deleteTrip"
+          data-id="{{item.id}}"
+        >
+          <view class="trash-icon"></view>
+        </button>
+
+        <!-- 标题覆盖层 - 左下角 -->
+        <view class="trip-title-overlay">
+          <view class="trip-type-row">
+            <view class="trip-type-icon trip-type-icon-{{item.type || 'other'}}"></view>
+            <text class="trip-type-label">{{item.typeEnglish || item.typeText || 'TRIP'}}</text>
+          </view>
+          <text class="trip-title-main">{{item.name || item.destination || '未命名行程'}}</text>
+          <view class="trip-location-row">
+            <view class="trip-location-icon"></view>
+            <text class="trip-location-text">{{item.destination || '未填写目的地'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 信息区域 -->
+      <view class="trip-info-section">
+        <!-- 日期和天数 -->
+        <view class="trip-info-row">
+          <view class="trip-info-item">
+            <text class="trip-info-label">出发日期</text>
+            <text class="trip-info-value">{{item.startDate || '未设置'}}</text>
+          </view>
+          <view class="trip-info-item trip-info-item-center">
+            <text class="trip-info-label">行程天数</text>
+            <text class="trip-info-value">{{item.duration || 0}}天</text>
+          </view>
+          <view class="trip-info-item trip-info-item-right">
+            <button 
+              class="check-btn" 
+              bindtap="checkTrip"
+              data-id="{{item.id}}"
+              catchtap="true"
+            >
+              <text class="check-btn-text">查验</text>
+              <text class="check-btn-arrow">→</text>
+            </button>
+          </view>
+        </view>
+
+        <!-- 进度条 -->
+        <view class="trip-progress-section">
+          <view class="progress-content">
+            <view class="progress-header">
+              <text class="progress-label">清单进度</text>
+              <text class="progress-percent">{{item.progress || 0}}%</text>
+            </view>
+            <view class="progress-bar-wrapper">
+              <view class="progress-bar-bg">
+                <view 
+                  class="progress-bar-fill" 
+                  style="width: {{item.progress || 0}}%"
+                ></view>
+              </view>
+            </view>
+          </view>
+        </view>
+        </view>
+      </view>
+      </view>
+    </block>
+    
+    <!-- 空状态页面 -->
+    <view wx:if="{{filteredTrips.length === 0 && !loading}}" class="empty-state-container">
+      <!-- 中央图标区域 -->
+      <view class="empty-icon-wrapper">
+        <view class="empty-icon-circle">
+          <view class="empty-icon-pin"></view>
+        </view>
+      </view>
+
+      <!-- 主文本 -->
+      <view class="empty-main-text">暂无合作行程</view>
+
+      <!-- 副文本 -->
+      <view class="empty-sub-text">还没有合作出行计划？创建或加入一个合作行程吧</view>
+
+      <!-- 操作按钮区域 -->
+      <view class="empty-actions">
+        <!-- 主按钮：创建新行程 -->
+        <button class="empty-btn-primary" bindtap="createTrip">
+          <text class="empty-btn-text">创建新行程</text>
+        </button>
+
+        <!-- 次按钮：输入邀请码加入 -->
+        <button class="empty-btn-secondary" bindtap="goJoinPage">
+          <text class="empty-btn-text-secondary">输入邀请码加入</text>
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,233 @@
+<!--pages/cooperative-trip-detail/cooperative-trip-detail.wxml-->
+<view class="trip-detail-page">
+  <view wx:if="{{loading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+  
+  <view wx:else>
+    <!-- 1. 沉浸式 Hero 区域 (顶部大图) -->
+    <view class="hero-section">
+      <!-- 背景图 (如果没有图则显示默认图片) -->
+      <image 
+        class="hero-image" 
+        src="{{trip.img }}" 
+        mode="aspectFill"
+        binderror="handlePictureError"
+      />
+      <view class="hero-gradient"></view> <!-- 渐变遮罩 -->
+      
+      <!-- 顶部导航栏 (透明) -->
+      <view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+        <!-- 这里留空或者放自定义返回键 -->
+      </view>
+      
+      <!-- 悬浮天气小组件 (右上角) -->
+      <view wx:if="{{weatherForecast30d && weatherForecast30d.forecast && weatherForecast30d.forecast.length > 0}}" class="weather-widget glass-effect">
+        <view class="weather-icon-wrap">
+          <!-- 动态显示天气图标 -->
+          <image wx:if="{{weatherForecast30d.forecast[0].iconDay}}" class="weather-icon-img" src="{{weatherForecast30d.forecast[0].iconDay}}" mode="aspectFit" binderror="handleWeatherIconError" />
+          <view wx:else class="icon-sun-cloud"></view>
+        </view>
+        <view class="weather-temp">
+          {{weatherForecast30d.forecast[0].tempMax || '24'}}°
+        </view>
+        <view class="weather-desc">
+          {{weatherForecast30d.forecast[0].textDay || '多云转晴'}}
+        </view>
+        <view class="weather-line"></view>
+        <view class="weather-sub">
+          <view class="icon-droplet"></view> 30%
+        </view>
+      </view>
+      
+      <!-- 底部标题内容 -->
+      <view class="hero-content">
+        <view class="hero-tags">
+          <view class="tag-glass">
+            <view class="icon-briefcase"></view>
+            <text>{{trip.type === 'business' ? '商务差旅' : trip.type === 'tourism' ? '休闲旅游' : trip.type === 'family' ? '探亲' : '其他'}}</text>
+          </view>
+          <view class="tag-blue">
+            {{trip.duration || 1}} 天行程
+          </view>
+        </view>
+        
+        <view class="hero-title-row">
+          <text class="hero-title">{{trip.name || trip.destination}}</text>
+          <view wx:if="{{isCreator}}" class="edit-btn" bindtap="startEditName">
+            <view class="icon-edit"></view>
+          </view>
+        </view>
+        <view class="hero-location">
+          <view class="icon-pin"></view> {{trip.destination}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 2. 主要内容区域 -->
+    <view class="content-body">
+      
+      <!-- A. 行程详情卡片 -->
+      <view class="info-card animate-slide-up">
+        <view class="card-header-simple">
+          <view class="icon-box-gray"><view class="icon-notebook"></view></view>
+          <text class="header-title">行程详情</text>
+        </view>
+        <text class="detail-text">{{trip.description || '暂无详细行程规划。'}}</text>
+      </view>
+
+      <!-- B. 重要备注 (黄色便利贴风格) -->
+      <view wx:if="{{trip.specialNeeds}}" class="note-card animate-slide-up" style="animation-delay: 0.1s;">
+        <view class="note-bg-icon"><view class="icon-sticky-lg"></view></view>
+        <view class="note-header">
+          <view class="icon-sticky-sm"></view>
+          <text>重要备注</text>
+        </view>
+        <text class="note-text">{{trip.specialNeeds}}</text>
+      </view>
+
+      <!-- C. 日期与倒计时 -->
+      <view class="date-card animate-slide-up" style="animation-delay: 0.2s;">
+        <view class="date-left">
+          <view class="icon-box-blue"><view class="icon-calendar"></view></view>
+          <view>
+            <view class="label-xs">出发日期</view>
+            <view class="value-md">{{trip.startDate}}</view>
+          </view>
+        </view>
+        <view class="date-right">
+          <view class="label-xs align-right">倒计时</view>
+          <view class="value-lg">{{trip.countdown || 1}} 天</view>
+        </view>
+      </view>
+
+      <!-- D. 物品清单 (手风琴样式) -->
+      <view class="checklist-card animate-slide-up" style="animation-delay: 0.3s;">
+        <!-- 头部：点击可收起/展开 -->
+        <view class="checklist-header" bindtap="toggleChecklist">
+          <view class="header-left">
+            <text class="header-lg">物品清单</text>
+            <view class="count-badge">{{items.length}} 项</view>
+          </view>
+          <view class="header-right">
+            <view class="progress-info">
+              <text class="label-xs">完成度</text>
+              <text class="percent-val">{{progressPercentage || 0}}%</text>
+            </view>
+            <view class="icon-chevron {{isChecklistExpanded ? 'rotate' : ''}}"></view>
+          </view>
+        </view>
+        <!-- 展开的内容区 -->
+        <view class="checklist-body" wx:if="{{isChecklistExpanded}}">
+          <!-- 进度条 -->
+          <view class="progress-track">
+            <view class="progress-fill" style="width: {{progressPercentage}}%;"></view>
+          </view>
+          <!-- 列表 -->
+          <view class="checklist-items">
+            <block wx:for="{{items}}" wx:key="id">
+              <view class="check-item {{item.checkedStatus === 1 ? 'is-checked' : ''}}">
+                <view class="item-content">
+                  <text class="item-name">{{item.name}}</text>
+                </view>
+                <view class="item-status">
+                  {{item.checkedStatus === 1 ? '已查验' : '待查验'}}
+                </view>
+              </view>
+            </block>
+            <view wx:if="{{items.length === 0}}" class="empty-tip">暂无物品</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- E. 成员完成状态 (合作行程特有) -->
+      <view class="member-progress-wrapper animate-slide-up" style="animation-delay: 0.4s;">
+        <member-progress trip-id="{{tripId}}"></member-progress>
+      </view>
+
+      <!-- 底部垫高，防止被悬浮岛挡住 -->
+      <view style="height: 200rpx;"></view>
+    </view>
+
+    <!-- 3. 底部悬浮操作岛 (Floating Action Island) -->
+    <view class="floating-island">
+      <!-- 返回按钮 -->
+      <view class="island-btn btn-back" bindtap="navigateBack">
+        <view class="icon-chevron-left"></view>
+      </view>
+      
+      <!-- 补录按钮 -->
+      <view class="island-btn btn-add" bindtap="viewChecklist">
+        <view class="icon-plus"></view>
+        <text>补录</text>
+      </view>
+      <!-- 开始查验 (深色主按钮) -->
+      <view class="island-btn btn-start" bindtap="startCheck">
+        <view class="icon-play"></view>
+        <text>开始查验</text>
+      </view>
+      <!-- 邀请成员按钮 (合作行程特有) -->
+      <view class="island-btn btn-invite" bindtap="openInviteDialog">
+        <view class="icon-users"></view>
+        <text>邀请</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑名称弹窗 -->
+  <view wx:if="{{editingName}}" class="edit-name-modal" bindtap="cancelEditName">
+    <view class="edit-name-dialog" catchtap="stopPropagation">
+      <view class="edit-name-title">编辑行程名称</view>
+      <input 
+        class="edit-name-input" 
+        value="{{editNameValue}}" 
+        bindinput="handleNameInput"
+        placeholder="请输入新的行程名称"
+        auto-focus
+      />
+      <view class="edit-name-actions">
+        <button class="edit-btn-cancel" bindtap="cancelEditName">取消</button>
+        <button class="edit-btn-save" bindtap="saveTripName" loading="{{savingName}}">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 邀请弹窗 -->
+  <view wx:if="{{inviteDialogVisible}}" class="invite-dialog-mask" catchtouchmove="preventScroll">
+    <view class="invite-dialog" catchtap="stopPropagation">
+      <view class="invite-header">
+        <text class="invite-title">合作行程邀请</text>
+        <text class="invite-tip" wx:if="{{!isCreator}}">
+          仅行程创建人可执行邀请操作
+        </text>
+      </view>
+      <view class="invite-body">
+        <view class="invite-item" bindtap="handleGenerateInviteQr" hover-class="invite-item--hover" data-type="qr">
+          <view class="invite-item-info">
+            <text class="invite-item-title">生成邀请二维码</text>
+            <text class="invite-item-desc">扫码快速加入合作行程</text>
+          </view>
+          <image wx:if="{{qrImage}}" class="invite-qr-preview" src="{{qrImage}}" mode="aspectFit" binderror="handleQrImageError" />
+          <text wx:else class="invite-placeholder">点击生成</text>
+        </view>
+
+        <view class="invite-item" bindtap="handleGenerateInviteCode" hover-class="invite-item--hover" data-type="code">
+          <view class="invite-item-info">
+            <text class="invite-item-title">生成邀请码</text>
+            <text class="invite-item-desc">复制分享给好友输入加入</text>
+          </view>
+          <text class="invite-code-text">{{inviteCode || '点击生成'}}</text>
+        </view>
+
+        <view class="invite-item" bindtap="handleWechatInvite" hover-class="invite-item--hover" data-type="wechat">
+          <view class="invite-item-info">
+            <text class="invite-item-title">微信邀请</text>
+            <text class="invite-item-desc">分享至微信好友/朋友圈</text>
+          </view>
+          <text class="invite-placeholder">{{wechatLink ? '已生成链接' : '点击生成分享链接'}}</text>
+        </view>
+      </view>
+      <button class="invite-close" bindtap="closeInviteDialog">关闭</button>
+    </view>
+  </view>
+</view>

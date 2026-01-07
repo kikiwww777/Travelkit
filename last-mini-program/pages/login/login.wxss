@@ -1,0 +1,209 @@
+/* pages/login/login.wxss */
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-form {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo {
+  font-size: 48px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.title {
+  display: block;
+  margin: 16px 0 8px 0;
+  color: #303133;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.subtitle {
+  display: block;
+  color: #909399;
+  font-size: 14px;
+}
+
+.form-content {
+  width: 100%;
+}
+
+.login-tip {
+  text-align: center;
+  color: #606266;
+  font-size: 16px;
+  margin-bottom: 40px;
+}
+
+.login-btn {
+  width: 100%;
+  height: 48px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.wechat-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #07c160;
+  border-color: #07c160;
+}
+
+.wechat-login-btn::after {
+  border: none;
+}
+
+.wechat-login-btn[disabled] {
+  background: #c0c4cc !important;
+  border-color: #c0c4cc !important;
+  opacity: 0.6;
+}
+
+.wechat-icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.agreement-section {
+  margin-bottom: 20px;
+}
+
+.agreement-label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #606266;
+  line-height: 1.5;
+}
+
+.agreement-text {
+  color: #606266;
+  font-size: 12px;
+}
+
+.link-text {
+  color: #667eea;
+  font-size: 12px;
+  text-decoration: underline;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.login-tips {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.tip-text {
+  color: #909399;
+  font-size: 12px;
+}
+
+.guest-mode-section {
+  margin-top: 20px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e4e7ed;
+}
+
+.divider-text {
+  padding: 0 16px;
+  color: #909399;
+  font-size: 14px;
+  background: white;
+}
+
+.guest-login-btn {
+  width: 100%;
+  height: 48px;
+  border-radius: 4px;
+  font-size: 16px;
+  background: #f4f4f5;
+  color: #606266;
+  border: 1px solid #dcdfe6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guest-login-btn::after {
+  border: none;
+}
+
+.guest-icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.current-user-info {
+  background: #f5f7fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e4e7ed;
+}
+
+.user-info-text {
+  flex: 1;
+  font-size: 14px;
+  color: #606266;
+}
+
+.user-info-text text {
+  color: #303133;
+  font-weight: 500;
+}
+
+.switch-account-btn {
+  font-size: 12px;
+  padding: 4px 12px;
+  height: auto;
+  line-height: 1.5;
+  border-radius: 4px;
+  background: #fff;
+  color: #667eea;
+  border: 1px solid #667eea;
+}
+
+.switch-account-btn::after {
+  border: none;
+}
+

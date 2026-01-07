@@ -1,0 +1,30 @@
+server:
+  port: 8080
+  servlet:
+    #cookie 30???
+    session:
+      cookie:
+        max-age: 2592000
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    druid:
+      username: root
+      password: 767867WBW
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/check?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
+mybatis:
+  #mapper文件位置
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.check.pojo,com.example.check.cooperative.pojo,com.example.check.cooperative.dto
+  configuration:
+    #驼峰命名转换
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    com:
+      sky:
+        mapper: debug
+        service: info
+        controller: info

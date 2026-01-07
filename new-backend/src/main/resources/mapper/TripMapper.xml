@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.mapper.TripMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.check.pojo.Trip">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="destination" property="destination" jdbcType="VARCHAR"/>
+        <result column="location_id" property="locationId" jdbcType="VARCHAR"/>
+        <result column="start_date" property="startDate" jdbcType="DATE"/>
+        <result column="end_date" property="endDate" jdbcType="DATE"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="travelers" property="travelers" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="budget" property="budget" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="special_needs" property="specialNeeds" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="checked_items" property="checkedItems" jdbcType="INTEGER"/>
+        <result column="total_items" property="totalItems" jdbcType="INTEGER"/>
+        <result column="progress" property="progress" jdbcType="INTEGER"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+        <result column="img" property="img" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, name, destination, location_id, start_date, end_date, duration, travelers, type, budget, 
+        description, special_needs, status, checked_items, total_items, progress, created_at, updated_at, img
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trips
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trips
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectByStatus" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trips
+        WHERE status = #{status}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectByDestination" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trips
+        WHERE destination LIKE CONCAT('%', #{destination}, '%')
+        ORDER BY created_at DESC
+    </select>
+
+    <insert id="insert" parameterType="com.example.check.pojo.Trip" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO trips (user_id, name, destination, location_id, start_date, end_date, duration, travelers, type, budget, 
+                          description, special_needs, status, checked_items, total_items, progress, created_at, updated_at, img)
+        VALUES (#{userId}, #{name}, #{destination}, #{locationId}, #{startDate}, #{endDate}, #{duration}, #{travelers}, #{type}, #{budget}, 
+                #{description}, #{specialNeeds}, #{status}, #{checkedItems}, #{totalItems}, #{progress}, #{createdAt}, #{updatedAt}, #{img})
+    </insert>
+
+    <update id="update" parameterType="com.example.check.pojo.Trip">
+        UPDATE trips
+        SET name = #{name},
+            destination = #{destination},
+            location_id = #{locationId},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            duration = #{duration},
+            travelers = #{travelers},
+            type = #{type},
+            budget = #{budget},
+            description = #{description},
+            special_needs = #{specialNeeds},
+            status = #{status},
+            checked_items = #{checkedItems},
+            total_items = #{totalItems},
+            progress = #{progress},
+            updated_at = #{updatedAt},
+            img = #{img}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateProgress">
+        UPDATE trips
+        SET checked_items = #{checkedItems},
+            total_items = #{totalItems},
+            progress = #{progress},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateImg">
+        UPDATE trips
+        SET img = #{img},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM trips WHERE id = #{id}
+    </delete>
+
+    <select id="selectByPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trips
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="destination != null and destination != ''">
+                AND destination LIKE CONCAT('%', #{destination}, '%')
+            </if>
+        </where>
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM trips
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="destination != null and destination != ''">
+                AND destination LIKE CONCAT('%', #{destination}, '%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateStatus">
+        UPDATE trips
+        SET status = #{status},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateName">
+        UPDATE trips
+        SET name = #{name},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.mapper.TemplateItemMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.check.pojo.TemplateItem">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="template_id" property="templateId" jdbcType="INTEGER"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="item_overview_id" property="itemOverviewId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="priority" property="priority" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, template_id, category_id, item_overview_id, name, note, priority
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM template_items
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByTemplateId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT 
+            ti.id,
+            ti.template_id,
+            ti.category_id,
+            ti.item_overview_id,
+            ti.name,
+            ti.note,
+            ti.priority,
+            io.is_active
+        FROM template_items ti
+        LEFT JOIN item_overview io ON ti.item_overview_id = io.id
+        WHERE ti.template_id = #{templateId}
+        ORDER BY ti.priority DESC, ti.id ASC
+    </select>
+    
+    <insert id="insert" parameterType="com.example.check.pojo.TemplateItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO template_items (template_id, category_id, item_overview_id, name, note, priority)
+        VALUES (#{templateId}, #{categoryId}, #{itemOverviewId}, #{name}, #{note}, #{priority})
+    </insert>
+    
+    <update id="update" parameterType="com.example.check.pojo.TemplateItem">
+        UPDATE template_items
+        SET category_id = #{categoryId},
+            item_overview_id = #{itemOverviewId},
+            name = #{name},
+            note = #{note},
+            priority = #{priority}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM template_items WHERE id = #{id}
+    </delete>
+    
+    <delete id="deleteByTemplateId" parameterType="java.lang.Integer">
+        DELETE FROM template_items WHERE template_id = #{templateId}
+    </delete>
+
+</mapper>
+
+
+
+
+
+
+

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.cooperative.mapper.CooperativeItemMapper">
+
+    <resultMap id="CooperativeItemResultMap" type="com.example.check.cooperative.pojo.CooperativeItem">
+        <id column="id" property="id"/>
+        <result column="trip_id" property="tripId"/>
+        <result column="added_by" property="addedBy"/>
+        <result column="added_by_name" property="addedByName"/>
+        <result column="item_overview_id" property="itemOverviewId"/>
+        <result column="name" property="name"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="priority" property="priority"/>
+        <result column="description" property="description"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <sql id="CooperativeItemColumns">
+        ci.id,
+        ci.trip_id,
+        ci.added_by,
+        ci.item_overview_id,
+        ci.name,
+        ci.category_id,
+        ci.priority,
+        ci.description,
+        ci.created_at,
+        ci.updated_at
+    </sql>
+
+    <select id="selectByTripId" parameterType="java.lang.Integer" resultMap="CooperativeItemResultMap">
+        SELECT
+        <include refid="CooperativeItemColumns"/>,
+        u.name AS added_by_name
+        FROM cooperative_items ci
+        LEFT JOIN users u ON ci.added_by = u.id
+        WHERE ci.trip_id = #{tripId}
+        ORDER BY ci.created_at ASC
+    </select>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="CooperativeItemResultMap">
+        SELECT
+        <include refid="CooperativeItemColumns"/>
+        FROM cooperative_items ci
+        WHERE ci.id = #{id}
+    </select>
+
+    <select id="selectByTripIdAndName" resultMap="CooperativeItemResultMap">
+        SELECT
+        <include refid="CooperativeItemColumns"/>,
+        u.name AS added_by_name
+        FROM cooperative_items ci
+        LEFT JOIN users u ON ci.added_by = u.id
+        WHERE ci.trip_id = #{tripId} AND ci.name = #{name}
+        LIMIT 1
+    </select>
+
+    <select id="selectByTripIdAndItemOverviewId" resultMap="CooperativeItemResultMap">
+        SELECT
+        <include refid="CooperativeItemColumns"/>,
+        u.name AS added_by_name
+        FROM cooperative_items ci
+        LEFT JOIN users u ON ci.added_by = u.id
+        WHERE ci.trip_id = #{tripId} AND ci.item_overview_id = #{itemOverviewId}
+        LIMIT 1
+    </select>
+
+    <insert id="insert" parameterType="com.example.check.cooperative.pojo.CooperativeItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cooperative_items
+        (trip_id, added_by, item_overview_id, name, category_id, priority, description, created_at, updated_at)
+        VALUES
+        (#{tripId}, #{addedBy}, #{itemOverviewId}, #{name}, #{categoryId}, #{priority}, #{description}, NOW(), NOW())
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM cooperative_items WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByTripId" parameterType="java.lang.Integer">
+        DELETE FROM cooperative_items WHERE trip_id = #{tripId}
+    </delete>
+</mapper>
+

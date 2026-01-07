@@ -1,0 +1,703 @@
+<!--pages/admin/admin.wxml-->
+<view class="admin-container">
+  <!-- 标签页 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{activeTab === 0 ? 'active' : ''}}" 
+      bindtap="onTabChange"
+      data-index="0"
+    >
+      模板管理
+    </view>
+    <view 
+      class="tab-item {{activeTab === 1 ? 'active' : ''}}" 
+      bindtap="onTabChange"
+      data-index="1"
+    >
+      用户管理
+    </view>
+    <view 
+      class="tab-item {{activeTab === 2 ? 'active' : ''}}" 
+      bindtap="onTabChange"
+      data-index="2"
+    >
+      物品总览
+    </view>
+  </view>
+
+  <!-- 模板管理 -->
+  <view class="tab-content" wx:if="{{activeTab === 0}}">
+    <!-- 筛选栏 -->
+    <view class="filter-bar">
+      <picker 
+        mode="selector" 
+        range="{{['全部', '待审核', '已通过', '已拒绝']}}"
+        value="{{templateStatusFilter === null ? 0 : templateStatusFilter + 1}}"
+        bindchange="onTemplateStatusFilterChange"
+      >
+        <view class="filter-item">
+          {{templateStatusFilter === null ? '全部' : (templateStatusFilter === 0 ? '待审核' : (templateStatusFilter === 1 ? '已通过' : '已拒绝'))}}
+        </view>
+      </picker>
+      <input 
+        class="filter-input" 
+        placeholder="搜索创建者姓名" 
+        value="{{templateCreatorNameFilter}}"
+        bindinput="onTemplateCreatorNameInput"
+      />
+      <button class="refresh-btn" size="mini" bindtap="loadTemplates">刷新</button>
+    </view>
+
+    <!-- 模板列表 - 卡片展示 -->
+    <view class="list-container">
+      <view 
+        class="template-card" 
+        wx:for="{{filteredTemplates}}" 
+        wx:key="id"
+      >
+        <view class="card-header">
+          <text class="card-title">{{item.name}}</text>
+          <button 
+            class="view-detail-btn" 
+            size="mini" 
+            bindtap="viewTemplateDetail"
+            data-id="{{item.id}}"
+          >
+            查看详细
+          </button>
+        </view>
+        <view class="card-content">
+          <view class="card-info-row">
+            <text class="info-label">创建者：</text>
+            <text class="info-value">{{item.createdByName || 'ID: ' + item.createdBy}}</text>
+          </view>
+          <view class="card-info-row">
+            <text class="info-label">创建时间：</text>
+            <text class="info-value">{{item.createdAtText || item.createdAt || '-'}}</text>
+          </view>
+          <view class="card-info-row">
+            <text class="info-label">类型：</text>
+            <text class="info-tag type-tag">{{item.typeText || item.type || '-'}}</text>
+          </view>
+          <view class="card-info-row">
+            <text class="info-label">标签：</text>
+            <text class="info-value tags-value">{{item.tags || '无标签'}}</text>
+          </view>
+          <view class="card-info-row">
+            <text class="info-label">状态：</text>
+            <text class="item-status {{item.isStatus === 0 ? 'pending' : (item.isStatus === 1 ? 'approved' : (item.isStatus === 2 ? 'rejected' : 'no-audit'))}}" style="padding-left: 9px;">
+              {{item.statusText || (item.isStatus === 0 ? '待审核' : (item.isStatus === 1 ? '已通过' : (item.isStatus === 2 ? '已拒绝' : '无需审核')))}}
+            </text>
+          </view>
+          <view class="card-info-row" wx:if="{{item.destination}}">
+            <text class="info-label">目的地：</text>
+            <text class="info-value">{{item.destination}}</text>
+          </view>
+        </view>
+        <view class="card-actions" catchtap="stopPropagation">
+          <!-- 待审核状态：显示通过和拒绝两个按钮 -->
+          <button 
+            wx:if="{{item.isStatus === 0}}"
+            class="action-btn approve-btn" 
+            size="mini" 
+            bindtap="openAuditDialog"
+            data-id="{{item.id}}"
+            data-action="approve"
+          >
+            通过
+          </button>
+          <button 
+            wx:if="{{item.isStatus === 0}}"
+            class="action-btn reject-btn" 
+            size="mini" 
+            bindtap="openAuditDialog"
+            data-id="{{item.id}}"
+            data-action="reject"
+          >
+            拒绝
+          </button>
+          <!-- 已通过状态：可以拒绝 -->
+          <button 
+            wx:if="{{item.isStatus === 1}}"
+            class="action-btn reject-btn" 
+            size="mini" 
+            bindtap="openAuditDialog"
+            data-id="{{item.id}}"
+            data-action="reject"
+          >
+            拒绝
+          </button>
+          <!-- 已拒绝状态：可以通过 -->
+          <button 
+            wx:if="{{item.isStatus === 2}}"
+            class="action-btn approve-btn" 
+            size="mini" 
+            bindtap="openAuditDialog"
+            data-id="{{item.id}}"
+            data-action="approve"
+          >
+            通过
+          </button>
+        </view>
+      </view>
+      <view wx:if="{{filteredTemplates.length === 0 && !loading}}" class="empty-state">
+        暂无模板数据
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户管理 -->
+  <view class="tab-content" wx:if="{{activeTab === 1}}">
+    <!-- 筛选栏 -->
+    <view class="filter-bar">
+      <picker 
+        mode="selector" 
+        range="{{['全部', '正常', '封禁']}}"
+        value="{{userStatusFilter === null ? 0 : userStatusFilter + 1}}"
+        bindchange="onUserStatusFilterChange"
+      >
+        <view class="filter-item">
+          {{userStatusFilter === null ? '全部' : (userStatusFilter === 0 ? '正常' : '封禁')}}
+        </view>
+      </picker>
+      <input 
+        class="filter-input" 
+        placeholder="搜索用户名、姓名" 
+        value="{{userSearchKeyword}}"
+        bindinput="onUserSearchInput"
+      />
+      <button class="refresh-btn" size="mini" bindtap="loadUsers">刷新</button>
+    </view>
+
+    <!-- 用户列表 - 卡片展示 -->
+    <view class="list-container">
+      <view 
+        class="user-card" 
+        wx:for="{{filteredUsers}}" 
+        wx:key="id"
+        bindtap="viewUserDetail"
+        data-user="{{item}}"
+      >
+        <view class="user-card-header">
+          <image 
+            class="user-card-avatar" 
+            src="{{item.avatar || 'https://tse4-mm.cn.bing.net/th/id/OIP-C.ErvABQbfJNSUHKvzwd9lHwAAAA?w=191&h=191&c=7&r=0&o=5&pid=1.7'}}" 
+            mode="aspectFill"
+          />
+          <view class="user-card-info">
+            <text class="user-card-name">{{item.name || item.username}}</text>
+            <text class="user-card-identity">{{item.identity === 1 ? '管理员' : '普通用户'}}</text>
+            <text class="user-card-time">{{formatDate(item.createdAt)}}</text>
+          </view>
+        </view>
+        <view class="user-card-actions" catchtap="stopPropagation">
+          <button 
+            class="action-btn grant-btn" 
+            size="mini" 
+            bindtap="grantUser"
+            data-user="{{item}}"
+          >
+            赋权
+          </button>
+          <button 
+            wx:if="{{item.isStatus !== 1}}"
+            class="action-btn disable-btn" 
+            size="mini" 
+            bindtap="disableUser"
+            data-id="{{item.id}}"
+          >
+            禁用
+          </button>
+          <button 
+            wx:if="{{item.isStatus === 1}}"
+            class="action-btn enable-btn" 
+            size="mini" 
+            bindtap="enableUser"
+            data-id="{{item.id}}"
+          >
+            启用
+          </button>
+        </view>
+      </view>
+      <view wx:if="{{filteredUsers.length === 0 && !loading}}" class="empty-state">
+        暂无用户数据
+      </view>
+    </view>
+  </view>
+
+  <!-- 物品总览管理 -->
+  <view class="tab-content" wx:if="{{activeTab === 2}}">
+    <!-- 筛选栏 -->
+    <view class="filter-bar">
+      <picker 
+        mode="selector" 
+        range="{{categoryRange}}"
+        value="{{categoryFilterIndex}}"
+        bindchange="onCategoryFilterChange"
+      >
+        <view class="filter-item">
+          {{categoryFilterIndex === 0 ? '全部类别' : categoryRange[categoryFilterIndex]}}
+        </view>
+      </picker>
+      <picker 
+        mode="selector" 
+        range="{{['全部', '激活', '禁用']}}"
+        value="{{itemOverviewStatusFilter === null ? 0 : (itemOverviewStatusFilter === 1 ? 1 : 2)}}"
+        bindchange="onItemOverviewStatusFilterChange"
+      >
+        <view class="filter-item">
+          {{itemOverviewStatusFilter === null ? '全部' : (itemOverviewStatusFilter === 1 ? '激活' : '禁用')}}
+        </view>
+      </picker>
+      <input 
+        class="filter-input" 
+        placeholder="搜索物品名称或描述" 
+        value="{{itemOverviewSearchKeyword}}"
+        bindinput="onItemOverviewSearchInput"
+      />
+         <button class="refresh-btn" size="mini" bindtap="makeOverviews">创建</button>
+    </view>
+
+    <!-- 物品列表 - 卡片展示 -->
+    <view class="list-container">
+      <view 
+        class="item-overview-card" 
+        wx:for="{{filteredItemOverviews}}" 
+        wx:key="id"
+        bindtap="viewItemOverviewDetail"
+        data-item="{{item}}"
+      >
+        <view class="item-card-header">
+          <image 
+            class="item-card-image" 
+            src="{{item.imageUrl || 'https://tse4-mm.cn.bing.net/th/id/OIP-C.ErvABQbfJNSUHKvzwd9lHwAAAA?w=191&h=191&c=7&r=0&o=5&pid=1.7'}}" 
+            mode="aspectFill"
+          />
+          <view class="item-card-info">
+            <text class="item-card-name">{{item.name}}</text>
+            <text class="item-card-category">{{item.categoryName || '未分类'}}</text>
+            <text class="item-card-time" style="font-size: 14px;">创建时间：{{item.createdAt}}</text>
+            <text class="item-status {{item.isActive === true || item.isActive === 1 ? 'active' : 'inactive'}}" style="padding-left: 20px;">
+              {{item.isActive === true || item.isActive === 1 ? '激活' : '禁用'}}
+            </text>
+          </view>
+        </view>
+        <view class="item-card-tags" wx:if="{{item.tags && Array.isArray(item.tags) && item.tags.length > 0}}">
+          <view class="tags-container">
+            <text 
+              class="tag-item" 
+              wx:for="{{item.tags}}" 
+              wx:key="index"
+              wx:for-item="tag"
+            >
+              {{tag}}
+            </text>
+          </view>
+        </view>
+        <view class="item-card-actions" catchtap="stopPropagation">
+          <button
+            class="action-btn enable-btn" 
+            size="mini" 
+            bindtap="editItemOverview"
+            data-item="{{item}}"
+          >
+            编辑
+          </button>
+          <button 
+            wx:if="{{item.isActive !== true && item.isActive !== 1}}"
+            class="action-btn enable-btn" 
+            size="mini" 
+            bindtap="enableItemOverview"
+            data-id="{{item.id}}"
+          >
+            启用
+          </button>
+          <button 
+            wx:if="{{item.isActive === true || item.isActive === 1}}"
+            class="action-btn disable-btn" 
+            size="mini" 
+            bindtap="disableItemOverview"
+            data-id="{{item.id}}"
+          >
+            禁用
+          </button>
+        </view>
+      </view>
+      <view wx:if="{{filteredItemOverviews.length === 0 && !loading}}" class="empty-state">
+        暂无物品数据
+      </view>
+    </view>
+  </view>
+
+  <!-- 模板详情对话框 -->
+  <view class="dialog-mask" wx:if="{{templateDetailVisible}}" bindtap="closeTemplateDetail">
+    <view class="dialog-content detail-dialog" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">模板详情</text>
+        <text class="dialog-close" bindtap="closeTemplateDetail">×</text>
+      </view>
+      <view class="dialog-body" wx:if="{{selectedTemplate}}">
+        <view class="detail-section">
+          <view class="section-title">模板信息（trip_templates表）</view>
+          <view class="detail-item">
+            <text class="detail-label">模板ID：</text>
+            <text class="detail-value">{{selectedTemplate.id}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">模板名称：</text>
+            <text class="detail-value">{{selectedTemplate.name}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">描述：</text>
+            <text class="detail-value">{{selectedTemplate.description || '无描述'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">目的地：</text>
+            <text class="detail-value">{{selectedTemplate.destination || '-'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">天数：</text>
+            <text class="detail-value">{{selectedTemplate.duration || '-'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">类型：</text>
+            <text class="info-tag type-tag">{{selectedTemplate.typeText || selectedTemplate.type || '-'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">标签：</text>
+            <text class="detail-value">{{selectedTemplate.tags || '无标签'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">公开/私有：</text>
+            <text class="detail-value">{{selectedTemplate.isPublicText || (selectedTemplate.isPublic ? '公开' : '私有')}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">审核状态：{{selectedTemplate.statusText || (selectedTemplate.isStatus === 0 ? '待审核' : (selectedTemplate.isStatus === 1 ? '已通过' : (selectedTemplate.isStatus === 2 ? '已拒绝' : '无需审核')))}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">审核原因：</text>
+            <text class="detail-value">{{selectedTemplate.result || '-'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">创建者ID：</text>
+            <text class="detail-value">{{selectedTemplate.createdBy}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">创建者姓名：</text>
+            <text class="detail-value">{{selectedTemplate.createdByName || '-'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">创建时间：</text>
+            <text class="detail-value">{{selectedTemplate.createdAtText || selectedTemplate.createdAt || '-'}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">更新时间：</text>
+            <text class="detail-value">{{selectedTemplate.updatedAtText || selectedTemplate.updatedAt || '-'}}</text>
+          </view>
+        </view>
+        
+        <view class="detail-section">
+          <view class="section-title">模板物品列表（template_items表）</view>
+          <view wx:if="{{loadingTemplateItems}}" class="loading-text">加载中...</view>
+          <view wx:elif="{{templateItems.length === 0}}" class="empty-items">暂无物品</view>
+          <view wx:else class="template-items">
+            <view wx:for="{{templateItems}}" wx:key="id" class="template-item">
+              <view class="item-detail-card">
+                <view class="item-detail-row">
+                  <text class="item-detail-label">物品ID：</text>
+                  <text class="item-detail-value">{{item.id}}</text>
+                </view>
+                <view class="item-detail-row">
+                  <text class="item-detail-label">模板ID：</text>
+                  <text class="item-detail-value">{{item.templateId}}</text>
+                </view>
+                <view class="item-detail-row">
+                  <text class="item-detail-label">物品名称：</text>
+                  <text class="item-detail-value">{{item.name}}</text>
+                </view>
+                <view class="item-detail-row">
+                  <text class="item-detail-label">分类ID：</text>
+                  <text class="item-detail-value">{{item.categoryId || '-'}}</text>
+                </view>
+                <view class="item-detail-row">
+                  <text class="item-detail-label">物品总览ID：</text>
+                  <text class="item-detail-value">{{item.itemOverviewId || '-'}}</text>
+                </view>
+                <view class="item-detail-row">
+                  <text class="item-detail-label">优先级：</text>
+                  <text class="item-priority">{{item.priorityText || item.priority || '-'}}</text>
+                </view>
+                <view class="item-detail-row">
+                  <text class="item-detail-label">备注：</text>
+                  <text class="item-detail-value">{{item.note || '-'}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+    </view>
+  </view>
+
+  <!-- 审核对话框 -->
+  <view class="dialog-mask" wx:if="{{auditDialogVisible}}" bindtap="closeAuditDialog">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">{{auditAction === 'approve' ? '审核通过' : '审核拒绝'}}</text>
+        <text class="dialog-close" bindtap="closeAuditDialog">×</text>
+      </view>
+      <view class="dialog-body">
+        <textarea 
+          class="audit-textarea" 
+          placeholder="请输入审核原因（至少5个字符）"
+          value="{{auditForm.result}}"
+          bindinput="onAuditResultInput"
+          maxlength="500"
+        />
+        <view class="dialog-actions">
+          <button class="dialog-btn cancel-btn" bindtap="closeAuditDialog">取消</button>
+          <button class="dialog-btn confirm-btn" type="primary" bindtap="submitAudit">确定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户详情对话框 -->
+  <view class="dialog-mask" wx:if="{{userDetailVisible}}" bindtap="closeUserDetail">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">用户详情</text>
+        <text class="dialog-close" bindtap="closeUserDetail">×</text>
+      </view>
+      <view class="dialog-body" wx:if="{{selectedUser}}">
+        <view class="user-detail-avatar-section">
+          <image 
+            class="user-detail-avatar" 
+            src="{{selectedUser.avatar || 'https://tse4-mm.cn.bing.net/th/id/OIP-C.ErvABQbfJNSUHKvzwd9lHwAAAA?w=191&h=191&c=7&r=0&o=5&pid=1.7'}}" 
+            mode="aspectFill"
+          />
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">用户名：</text>
+          <text class="detail-value">{{selectedUser.username}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">姓名：</text>
+          <text class="detail-value">{{selectedUser.name || '-'}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">身份：</text>
+          <text class="detail-value">{{selectedUser.identity === 1 ? '管理员' : '普通用户'}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">注册时间：</text>
+          <text class="detail-value">{{formatDate(selectedUser.createdAt)}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">性别：</text>
+          <text class="detail-value">{{getGenderText(selectedUser.gender)}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">生日：</text>
+          <text class="detail-value">{{formatBirthday(selectedUser.birthday) || '-'}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{selectedUser.isStatus === 1}}">
+          <text class="detail-label">封禁原因：</text>
+          <text class="detail-value">{{selectedUser.content || '-'}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">简介：</text>
+          <text class="detail-value">{{selectedUser.bio || '-'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 赋权对话框 -->
+  <view class="dialog-mask" wx:if="{{grantUserVisible}}" bindtap="closeGrantUser">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">用户赋权</text>
+        <text class="dialog-close" bindtap="closeGrantUser">×</text>
+      </view>
+      <view class="dialog-body">
+        <view class="form-item">
+          <text class="form-label">用户名：</text>
+          <text class="form-value">{{grantUserForm.username}}</text>
+        </view>
+        <view class="form-item">
+          <text class="form-label">姓名：</text>
+          <text class="form-value">{{grantUserForm.name}}</text>
+        </view>
+        <view class="form-item">
+          <text class="form-label">用户身份：</text>
+          <radio-group bindchange="onIdentityChange">
+            <label class="radio-label">
+              <radio value="0" checked="{{grantUserForm.identity === 0}}" />普通用户
+            </label>
+            <label class="radio-label">
+              <radio value="1" checked="{{grantUserForm.identity === 1}}" />管理员
+            </label>
+          </radio-group>
+        </view>
+        <view class="dialog-actions">
+          <button class="dialog-btn cancel-btn" bindtap="closeGrantUser">取消</button>
+          <button class="dialog-btn confirm-btn" type="primary" bindtap="submitGrantUser">确定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 物品总览详情对话框 -->
+  <view class="dialog-mask" wx:if="{{itemOverviewDetailVisible}}" bindtap="closeItemOverviewDetail">
+    <view class="dialog-content detail-dialog" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">物品详情</text>
+        <text class="dialog-close" bindtap="closeItemOverviewDetail">×</text>
+      </view>
+      <view class="dialog-body" wx:if="{{selectedItemOverview}}">
+        <view class="item-detail-image-section">
+          <image 
+            class="item-detail-image" 
+            src="{{selectedItemOverview.imageUrl || 'https://tse4-mm.cn.bing.net/th/id/OIP-C.ErvABQbfJNSUHKvzwd9lHwAAAA?w=191&h=191&c=7&r=0&o=5&pid=1.7'}}" 
+            mode="aspectFill"
+          />
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">物品名称：</text>
+          <text class="detail-value">{{selectedItemOverview.name}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">物品类别：</text>
+          <text class="detail-value">{{selectedItemOverview.categoryName || '未分类'}}</text>
+        </view>
+        --------------------------------------------
+        <view class="detail-item">
+          <text class="detail-label" >
+           状态: {{selectedItemOverview.isActive === true || selectedItemOverview.isActive === 1 ? '激活' : '禁用'}}
+          </text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">创建时间：</text>
+          <text class="detail-value">{{selectedItemOverview.createdAt}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{selectedItemOverview.description}}">
+          <text class="detail-label">描述：</text>
+          <text class="detail-value">{{selectedItemOverview.description}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{selectedItemOverview.tags && selectedItemOverview.tags.length > 0}}">
+          <text class="detail-label">标签：</text>
+          <view class="tags-container">
+            <text 
+              class="tag-item" 
+              wx:for="{{selectedItemOverview.tags}}" 
+              wx:key="index"
+            >
+              {{item}}
+            </text>
+          </view>
+        </view>
+      </view>
+      <view class="dialog-footer">
+      </view>
+    </view>
+  </view>
+
+  <!-- 创建物品对话框 -->
+  <view class="dialog-mask" wx:if="{{itemOverviewCreateVisible}}" bindtap="closeItemOverviewCreate">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">{{itemOverviewForm.id ? '编辑物品' : '创建物品'}}</text>
+        <text class="dialog-close" bindtap="closeItemOverviewCreate">×</text>
+      </view>
+      <view class="dialog-body">
+        <view class="form-item">
+          <text class="form-label">物品名称：</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入物品名称" 
+            value="{{itemOverviewForm.name}}"
+            bindinput="onItemNameInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">物品类别：</text>
+          <picker 
+            mode="selector" 
+            range="{{categoryNames}}"
+            value="{{selectedCategoryIndex >= 0 ? selectedCategoryIndex : 0}}"
+            bindchange="onItemCategoryChange"
+          >
+            <view class="picker-view">
+              {{itemOverviewForm.categoryName || '请选择类别'}}
+            </view>
+          </picker>
+        </view>
+        <view class="form-item">
+          <text class="form-label">图片：</text>
+          <view class="image-upload-section">
+            <image 
+              wx:if="{{itemOverviewForm.imageUrl}}"
+              class="preview-image" 
+              src="{{itemOverviewForm.imageUrl}}" 
+              mode="aspectFill"
+              binderror="handleImageError"
+            />
+            <view wx:else class="image-placeholder">暂无图片</view>
+            <view class="image-upload-buttons">
+              <button class="upload-btn" size="mini" bindtap="chooseImageFromAlbum">相册</button>
+              <button class="upload-btn" size="mini" bindtap="chooseImageFromCamera">相机</button>
+              <button 
+                class="upload-btn" 
+                size="mini" 
+                bindtap="crawlImage"
+                disabled="{{generatingImage}}"
+              >
+                {{generatingImage ? '爬取中...' : '爬取'}}
+              </button>
+              <button 
+                wx:if="{{crawledImages.length > 1}}"
+                class="upload-btn" 
+                size="mini" 
+                bindtap="switchCrawledImage"
+              >
+                切换({{currentImageIndex + 1}}/{{crawledImages.length}})
+              </button>
+            </view>
+          </view>
+        </view>
+        <view class="form-item">
+          <text class="form-label">标签：</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入标签，用逗号或中文逗号分隔，如：证件,国际 或 证件，国际" 
+            value="{{tagsInput}}"
+            bindinput="onTagsInput"
+          />
+          <text class="form-hint">多个标签请用逗号（,）或中文逗号（，）分隔</text>
+        </view>
+        <view class="form-item">
+          <text class="form-label">描述：</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入物品描述" 
+            value="{{itemOverviewForm.description}}"
+            bindinput="onItemDescriptionInput"
+            maxlength="500"
+          />
+        </view>
+        <view class="dialog-actions">
+          <button class="dialog-btn confirm-btn" type="primary" catchtap="submitItemOverviewCreate">{{itemOverviewForm.id ? '更新' : '创建'}}</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-mask">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>
+

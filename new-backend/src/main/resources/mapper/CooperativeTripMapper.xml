@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.cooperative.mapper.CooperativeTripMapper">
+
+    <resultMap id="CooperativeTripResultMap" type="com.example.check.cooperative.pojo.CooperativeTrip">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="creator_id" property="creatorId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="destination" property="destination" jdbcType="VARCHAR"/>
+        <result column="location_id" property="locationId" jdbcType="VARCHAR"/>
+        <result column="start_date" property="startDate" jdbcType="DATE"/>
+        <result column="end_date" property="endDate" jdbcType="DATE"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="travelers" property="travelers" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="budget" property="budget" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="special_needs" property="specialNeeds" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="checked_items" property="checkedItems" jdbcType="INTEGER"/>
+        <result column="total_items" property="totalItems" jdbcType="INTEGER"/>
+        <result column="progress" property="progress" jdbcType="INTEGER"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+        <result column="img" property="img" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="CooperativeTripColumns">
+        id, creator_id, name, destination, location_id, start_date, end_date, duration, travelers,
+        type, budget, description, special_needs, status, checked_items, total_items, progress,
+        created_at, updated_at, img
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="CooperativeTripResultMap">
+        SELECT <include refid="CooperativeTripColumns"/>
+        FROM cooperative_trips
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectMemberProgress" parameterType="java.lang.Integer"
+            resultType="com.example.check.cooperative.dto.MemberProgressDTO">
+        SELECT
+            m.id AS memberId,
+            m.trip_id AS tripId,
+            m.user_id AS userId,
+            CASE
+                WHEN stats.total_items IS NULL OR stats.total_items = 0 THEN 0
+                WHEN stats.pending_count = 0 THEN 1
+                ELSE 0
+            END AS completed,
+            COALESCE(stats.checked_count, 0) AS checkedCount,
+            COALESCE(stats.pending_count, 0) AS pendingCount,
+            COALESCE(stats.pending_names, '') AS pendingNames
+        FROM cooperative_trip_members m
+        LEFT JOIN users u ON m.user_id = u.id
+        LEFT JOIN (
+            SELECT
+                m_inner.trip_id,
+                m_inner.user_id,
+                COUNT(ci.id) AS total_items,
+                SUM(CASE WHEN COALESCE(cic.checked, 0) = 1 THEN 1 ELSE 0 END) AS checked_count,
+                SUM(CASE WHEN COALESCE(cic.checked, 0) = 1 THEN 0 ELSE 1 END) AS pending_count,
+                GROUP_CONCAT(
+                    CASE WHEN COALESCE(cic.checked, 0) = 1 THEN NULL ELSE ci.name END
+                    SEPARATOR '、'
+                ) AS pending_names
+            FROM cooperative_trip_members m_inner
+            JOIN cooperative_items ci
+                ON ci.trip_id = m_inner.trip_id
+            LEFT JOIN cooperative_item_checks cic
+                ON cic.item_id = ci.id
+                AND cic.user_id = m_inner.user_id
+            WHERE m_inner.trip_id = #{tripId}
+            GROUP BY m_inner.trip_id, m_inner.user_id
+        ) stats ON stats.trip_id = m.trip_id AND stats.user_id = m.user_id
+        WHERE m.trip_id = #{tripId}
+        ORDER BY completed DESC, stats.pending_count DESC, m.id ASC
+    </select>
+
+    <select id="countPendingItems" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM cooperative_items
+        WHERE trip_id = #{tripId}
+          AND (assignee_id = #{userId} OR assignee_id IS NULL)
+          AND checked = 0
+    </select>
+
+    <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="CooperativeTripResultMap">
+        SELECT DISTINCT
+            t.id,
+            t.creator_id,
+            t.name,
+            t.destination,
+            t.location_id,
+            t.start_date,
+            t.end_date,
+            t.duration,
+            t.travelers,
+            t.type,
+            t.budget,
+            t.description,
+            t.special_needs,
+            t.status,
+            t.checked_items,
+            t.total_items,
+            t.progress,
+            t.created_at,
+            t.updated_at,
+            t.img
+        FROM cooperative_trips t
+        LEFT JOIN cooperative_trip_members m ON m.trip_id = t.id
+        WHERE t.creator_id = #{userId}
+           OR m.user_id = #{userId}
+        ORDER BY t.created_at DESC
+    </select>
+
+    <insert id="insert" parameterType="com.example.check.cooperative.pojo.CooperativeTrip" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cooperative_trips
+        (creator_id, name, destination, location_id, start_date, end_date, duration, travelers, type, budget,
+         description, special_needs, status, checked_items, total_items, progress, created_at, updated_at, img)
+        VALUES
+        (#{creatorId}, #{name}, #{destination}, #{locationId}, #{startDate}, #{endDate}, #{duration}, #{travelers},
+         #{type}, #{budget}, #{description}, #{specialNeeds}, #{status}, #{checkedItems}, #{totalItems},
+         #{progress}, #{createdAt}, #{updatedAt}, #{img})
+    </insert>
+
+    <update id="updateName">
+        UPDATE cooperative_trips
+        SET name = #{name},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateImg">
+        UPDATE cooperative_trips
+        SET img = #{img},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="touchProgress">
+        UPDATE cooperative_trips
+        SET updated_at = NOW()
+        WHERE id = #{tripId}
+    </update>
+
+    <insert id="insertItemsFromTemplate">
+        INSERT INTO cooperative_items (trip_id, name, category_id, priority, item_overview_id, description, created_at, updated_at, added_by)
+        SELECT
+            #{tripId} AS trip_id,
+            ti.name,
+            ti.category_id,
+            ti.priority,
+            ti.item_overview_id,
+            COALESCE(io.description, '') AS description,
+            NOW(),
+            NOW(),
+            #{creatorId}
+        FROM template_items ti
+        LEFT JOIN item_overview io ON ti.item_overview_id = io.id
+        WHERE ti.template_id = #{templateId}
+    </insert>
+
+    <insert id="ensureCreatorMembership">
+        INSERT INTO cooperative_trip_members (trip_id, user_id, role, created_at)
+        SELECT #{tripId},
+               #{userId},
+               'creator',
+               NOW()
+        FROM users u
+        WHERE u.id = #{memberId}
+        ON DUPLICATE KEY UPDATE role = VALUES(role)
+    </insert>
+
+    <update id="updateStatus">
+        UPDATE cooperative_trips
+        SET status = #{status},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM cooperative_trips WHERE id = #{id}
+    </delete>
+
+    <resultMap id="CooperativeMemberResultMap" type="com.example.check.cooperative.pojo.CooperativeTripMember">
+        <id column="id" property="id"/>
+        <result column="trip_id" property="tripId"/>
+        <result column="user_id" property="userId"/>
+        <result column="memberName" property="memberName"/>
+        <result column="role" property="role"/>
+    </resultMap>
+
+    <select id="selectMember" resultMap="CooperativeMemberResultMap">
+        SELECT m.id, m.trip_id, m.user_id, m.role,
+               COALESCE(u.name, CONCAT('成员', m.user_id)) AS memberName
+        FROM cooperative_trip_members m
+        LEFT JOIN users u ON m.user_id = u.id
+        WHERE m.trip_id = #{tripId}
+          AND m.user_id = #{userId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertMember">
+        INSERT INTO cooperative_trip_members (trip_id, user_id, role, created_at)
+        VALUES (
+            #{tripId},
+            #{userId},
+            #{role},
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE role = VALUES(role)
+    </insert>
+
+    <select id="selectMembers" parameterType="java.lang.Integer" resultMap="CooperativeMemberResultMap">
+        SELECT m.id, m.trip_id, m.user_id, m.role,
+               COALESCE(u.name, CONCAT('成员', m.user_id)) AS memberName
+        FROM cooperative_trip_members m
+        LEFT JOIN users u ON m.user_id = u.id
+        WHERE m.trip_id = #{tripId}
+        ORDER BY m.created_at ASC
+    </select>
+
+    <update id="updateMemberAvatar">
+        UPDATE cooperative_trip_members
+        SET avatar_url = #{avatarUrl},
+            updated_at = NOW()
+        WHERE trip_id = #{tripId}
+          AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteMembersByTripId" parameterType="java.lang.Integer">
+        DELETE FROM cooperative_trip_members WHERE trip_id = #{tripId}
+    </delete>
+</mapper>
+

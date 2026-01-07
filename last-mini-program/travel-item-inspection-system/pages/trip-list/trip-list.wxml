@@ -1,0 +1,111 @@
+<!--pages/trip-list/trip-list.wxml-->
+<view class="trip-list-container">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <text class="page-title">我的行程</text>
+    <button class="create-btn" type="primary" size="mini" bindtap="createTrip">新建行程</button>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <picker 
+      class="filter-picker" 
+      mode="selector" 
+      range="{{statusOptions}}" 
+      range-key="label"
+      value="{{filterForm.statusIndex}}"
+      bindchange="onStatusChange"
+    >
+      <view class="picker-text">
+        {{selectedStatusLabel}}
+      </view>
+    </picker>
+    
+    <picker 
+      class="filter-picker" 
+      mode="selector" 
+      range="{{typeOptions}}" 
+      range-key="label"
+      value="{{filterForm.typeIndex}}"
+      bindchange="onTypeChange"
+    >
+      <view class="picker-text">
+        {{selectedTypeLabel}}
+      </view>
+    </picker>
+    
+    <input 
+      class="filter-input" 
+      placeholder="搜索目的地" 
+      value="{{filterForm.destination}}"
+      bindinput="onDestinationInput"
+    />
+    
+    <button class="reset-btn" size="mini" bindtap="resetFilter">重置</button>
+  </view>
+
+  <!-- 行程列表 -->
+  <view class="trip-list">
+    <view 
+      class="trip-card" 
+      wx:for="{{filteredTrips}}" 
+      wx:key="id"
+    >
+      <view class="trip-header">
+        <view class="trip-title-section">
+          <text class="trip-destination">{{item.destination}}</text>
+          <text class="trip-status status-{{item.status}}">{{item.statusText}}</text>
+        </view>
+        <text class="trip-more" bindtap="deleteTrip" data-id="{{item.id}}">删除</text>
+      </view>
+      
+      <view class="trip-info">
+        <text class="info-item">📅 {{item.startDate}} - {{item.endDate}}</text>
+        <text class="info-item">⏱ {{item.duration}}天</text>
+        <text class="info-item">👥 {{item.travelers}}人</text>
+        <text class="info-item">📍 {{item.typeText}}</text>
+      </view>
+      
+      <view class="trip-progress" wx:if="{{item.totalItems && item.totalItems > 0}}">
+        <view class="progress-label">
+          <text>查验进度</text>
+          <text>{{item.checkedItems || 0}}/{{item.totalItems}}</text>
+        </view>
+        <progress 
+          class="progress-bar" 
+          percent="{{item.progress || 0}}" 
+          stroke-width="6"
+          activeColor="#409eff"
+        />
+      </view>
+      
+      <view class="trip-actions">
+        <button 
+          class="action-btn" 
+          type="primary" 
+          size="mini" 
+          bindtap="viewTrip" 
+          data-id="{{item.id}}"
+        >
+          查看详情
+        </button>
+        <button 
+          class="action-btn" 
+          size="mini" 
+          bindtap="checkTrip" 
+          data-id="{{item.id}}"
+          disabled="{{item.status === 'completed' || item.status === 'cancelled'}}"
+        >
+          开始查验
+        </button>
+      </view>
+    </view>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{filteredTrips.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-text">暂无行程数据</text>
+      <button class="empty-btn" type="primary" bindtap="createTrip">创建第一个行程</button>
+    </view>
+  </view>
+</view>
+

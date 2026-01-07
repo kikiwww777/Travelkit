@@ -1,0 +1,129 @@
+<!--pages/cooperative-check-process/cooperative-check-process.wxml-->
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+  
+  <view wx:else>
+    <!-- ================= 1. 动态水位背景层 ================= -->
+    <view class="liquid-wrapper">
+      <!-- 整个水位容器 -->
+      <view 
+        class="liquid-level" 
+        style="height: {{isCompleted ? '100%' : displayProgress + '%'}}"
+      >
+        <!-- A. 波浪层 (使用 CSS 背景图，不再用 image 标签) -->
+        <view class="wave-layer {{isCompleted ? 'wave-green' : 'wave-blue'}}"></view>
+        
+        <!-- B. 纯色水体 (填补下方) -->
+        <view class="liquid-solid {{isCompleted ? 'bg-green' : 'bg-blue'}}"></view>
+      </view>
+    </view>
+
+    <!-- ================= 2. 内容层 (悬浮在水面之上) ================= -->
+    <view class="content-wrapper" style="padding-top: {{statusBarHeight}}px;">
+      
+      <!-- 顶部导航 -->
+      <view class="navbar">
+        <view class="nav-btn" bindtap="goBack">‹</view>
+        <view class="nav-title">
+          <text class="sub-title {{isCompleted ? 'text-green-dark' : 'text-blue-dark'}}">{{isCompleted ? '已封箱' : '合作清单'}}</text>
+          <text class="main-title">{{trip.name || trip.destination || '未命名行程'}}</text>
+        </view>
+        <view class="progress-pill {{isCompleted ? 'pill-green' : 'pill-blue'}}">{{progress}}%</view>
+      </view>
+
+      <!-- 滚动列表区 -->
+      <scroll-view 
+        scroll-y 
+        class="scroll-area" 
+        enable-flex
+        scroll-top="{{scrollTop}}"
+        bindscroll="onScroll"
+      >
+        <view class="scroll-content">
+          
+          <!-- ================= 待查验区域 (分组显示) ================= -->
+          <!-- 如果都完成了，显示空状态 -->
+          <view wx:if="{{isAllChecked && !isCompleted}}" class="empty-tip">
+            🎉 所有物品已准备就绪，请点击下方封箱
+          </view>
+
+          <!-- 循环渲染分类 -->
+          <block wx:else>
+            <block wx:for="{{categories}}" wx:for-item="cat" wx:key="name">
+              <view class="category-section">
+                <!-- 分类标题头 -->
+                <view class="category-header">
+                  <image class="category-icon" src="{{cat.config.icon}}" mode="aspectFit" />
+                  <text class="category-name" style="color: {{cat.config.color}}">{{cat.name}}</text>
+                  <view class="category-line"></view>
+                </view>
+
+                <!-- 该分类下的物品卡片 (Grid 布局) -->
+                <view class="card-grid">
+                  <block wx:for="{{cat.items}}" wx:for-item="item" wx:key="id">
+                    <view 
+                      class="item-card white-card"
+                      bindtap="toggleItem"
+                      data-id="{{item.id}}"
+                    >
+                      <!-- 图标颜色圆点 -->
+                      <view class="cat-dot" style="background-color: {{cat.config.bg}};">
+                        <image class="cat-dot-icon" src="{{cat.config.icon}}" mode="aspectFit" />
+                      </view>
+                      <text class="card-name">{{item.name}}</text>
+                      <view class="checkbox-circle"></view>
+                    </view>
+                  </block>
+                </view>
+              </view>
+            </block>
+          </block>
+
+          <!-- ================= 已装箱区域 (气泡沉底) ================= -->
+          <block wx:if="{{hasCheckedItems}}">
+            <view class="section-header" style="margin-top: 60rpx;">
+              <text class="section-title text-white-shadow">已装箱 ({{checkedCount}})</text>
+            </view>
+            <view class="card-grid">
+              <block wx:for="{{checklist}}" wx:key="id">
+                <!-- 只显示已查验的 (checked === 1) -->
+                <view 
+                  wx:if="{{item.checked === 1}}" 
+                  class="item-card bubble-card"
+                  bindtap="toggleItem"
+                  data-id="{{item.id}}"
+                >
+                  <view class="icon-check">✓</view>
+                  <text class="card-name text-white">{{item.name}}</text>
+                </view>
+              </block>
+            </view>
+          </block>
+
+          <view style="height: 200rpx;"></view> <!-- 底部垫高 -->
+        </view>
+      </scroll-view>
+
+      <!-- 底部按钮 -->
+      <view class="bottom-bar">
+        <button 
+          wx:if="{{!isCompleted}}"
+          class="action-btn {{isAllChecked ? 'btn-active' : 'btn-disabled'}}" 
+          bindtap="{{isAllChecked ? 'completeTrip' : ''}}"
+        >
+          {{isAllChecked ? '📦 确认打包完成' : '请先勾选所有物品'}}
+        </button>
+
+        <button 
+          wx:else
+          class="action-btn btn-green" 
+          bindtap="reactivateTrip"
+        >
+          🔓 重新激活清单
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

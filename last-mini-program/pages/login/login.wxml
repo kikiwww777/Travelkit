@@ -1,0 +1,70 @@
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <view class="login-form">
+    <view class="form-header">
+      <view class="logo">📦</view>
+      <text class="title">出行必带</text>
+      <text class="subtitle">智能推荐，让出行更安心</text>
+    </view>
+    
+    <view class="form-content">
+      <!-- 显示当前登录用户信息 -->
+      <view wx:if="{{showSwitchAccount && currentUser}}" class="current-user-info">
+        <view class="user-info-text">
+          <text>当前账号：{{currentUser.name || currentUser.username || '微信用户'}}</text>
+        </view>
+        <button 
+          class="switch-account-btn" 
+          type="default"
+          size="mini"
+          bindtap="switchAccount"
+        >
+          切换账号
+        </button>
+      </view>
+      
+      <view class="login-tip">
+        <text>使用微信账号快速登录</text>
+      </view>
+      
+    
+      <button 
+        class="btn-primary login-btn wechat-login-btn" 
+        type="primary"
+        loading="{{loading}}"
+        bindtap="handleWechatLogin"
+        disabled="{{!agreedToTerms}}"
+      >
+        <text class="wechat-icon">💬</text>
+        <text>微信授权登录</text>
+      </button>
+      
+      <view class="guest-mode-section">
+        <view class="divider">
+          <text class="divider-text">或</text>
+        </view>
+        <button 
+          class="btn-secondary guest-login-btn" 
+          type="default"
+          loading="{{guestLoading}}"
+          bindtap="handleGuestLogin"
+        >
+          <text class="guest-icon">👤</text>
+          <text>游客模式</text>
+        </button>
+      </view>
+      <view class="agreement-section" style="margin-top: 20px;">
+        <checkbox-group bindchange="onAgreementChange">
+          <label class="agreement-label">
+            <checkbox value="agreement" checked="{{agreedToTerms}}" />
+            <text class="agreement-text">已阅读并同意</text>
+            <text class="link-text" catchtap="viewAgreement">《用户协议》</text>
+            <text class="agreement-text">和</text>
+            <text class="link-text" catchtap="viewPrivacy">《隐私政策》</text>
+          </label>
+        </checkbox-group>
+      </view>
+    </view>
+  </view>
+</view>
+

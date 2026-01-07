@@ -1,0 +1,89 @@
+<!--pages/privacy/privacy.wxml-->
+<view class="privacy-container">
+  <view class="privacy-content">
+    <view class="title">隐私政策</view>
+    <view class="update-time">最后更新时间：2024年1月1日</view>
+    
+    <view class="section">
+      <view class="section-title">一、引言</view>
+      <view class="section-content">
+        "出行必带"小程序（以下简称"我们"）非常重视您的隐私保护。本隐私政策说明了我们如何收集、使用、存储和保护您的个人信息。请您仔细阅读本隐私政策。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">二、信息收集</view>
+      <view class="section-content">
+        我们可能收集以下信息：<br/>
+        1. <text class="bold">账户信息</text>：微信账号、昵称、头像等微信授权信息；<br/>
+        2. <text class="bold">使用信息</text>：行程数据、物品清单、使用记录等；<br/>
+        3. <text class="bold">设备信息</text>：设备型号、操作系统版本、小程序版本等；<br/>
+        4. <text class="bold">日志信息</text>：访问时间、操作记录等。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">三、信息使用</view>
+      <view class="section-content">
+        我们使用收集的信息用于：<br/>
+        1. 提供、维护和改进本服务；<br/>
+        2. 处理您的请求和交易；<br/>
+        3. 向您发送服务通知；<br/>
+        4. 进行数据分析，优化用户体验；<br/>
+        5. 遵守法律法规要求。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">四、信息存储</view>
+      <view class="section-content">
+        1. 您的信息将存储在中华人民共和国境内。<br/>
+        2. 我们采用合理的技术手段保护您的信息安全。<br/>
+        3. 除非法律法规要求，我们不会将您的信息传输至境外。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">五、信息共享</view>
+      <view class="section-content">
+        我们不会向第三方出售、出租或分享您的个人信息，除非：<br/>
+        1. 获得您的明确同意；<br/>
+        2. 法律法规要求；<br/>
+        3. 为提供服务需要，在严格保密的前提下与合作伙伴共享。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">六、您的权利</view>
+      <view class="section-content">
+        您有权：<br/>
+        1. 访问、更正您的个人信息；<br/>
+        2. 删除您的账户和数据；<br/>
+        3. 撤回您的授权同意；<br/>
+        4. 投诉举报。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">七、未成年人保护</view>
+      <view class="section-content">
+        我们非常重视未成年人的个人信息保护。如果您是未成年人，请在监护人同意和指导下使用本服务。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">八、隐私政策更新</view>
+      <view class="section-content">
+        我们可能适时更新本隐私政策。更新后的政策将在小程序内公布。如您继续使用本服务，视为接受更新后的政策。
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">九、联系我们</view>
+      <view class="section-content">
+        如您对本隐私政策有任何疑问，可通过小程序内的"我的"页面联系我们。
+      </view>
+    </view>
+  </view>
+</view>
+

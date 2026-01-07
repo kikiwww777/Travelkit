@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.cooperative.mapper.CooperativeItemCheckMapper">
+
+    <resultMap id="CooperativeItemCheckResult" type="com.example.check.cooperative.pojo.CooperativeItemCheck">
+        <id property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="tripId" column="trip_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="checked" column="checked"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="selectByTripIdAndUserId" resultMap="CooperativeItemCheckResult">
+        SELECT cic.*, ci.trip_id
+        FROM cooperative_item_checks cic
+        INNER JOIN cooperative_items ci ON cic.item_id = ci.id
+        WHERE ci.trip_id = #{tripId}
+          AND cic.user_id = #{userId}
+    </select>
+
+    <insert id="insertOrUpdate" parameterType="com.example.check.cooperative.pojo.CooperativeItemCheck">
+        INSERT INTO cooperative_item_checks (item_id, trip_id, user_id, checked, created_at, updated_at)
+        VALUES (#{itemId}, #{tripId}, #{userId}, #{checked}, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE
+            checked = VALUES(checked),
+            updated_at = NOW()
+    </insert>
+
+    <delete id="deleteByItemId" parameterType="int">
+        DELETE FROM cooperative_item_checks WHERE item_id = #{itemId}
+    </delete>
+
+    <delete id="deleteByTripIdAndUserId">
+        DELETE cic
+        FROM cooperative_item_checks cic
+        INNER JOIN cooperative_items ci ON cic.item_id = ci.id
+        WHERE ci.trip_id = #{tripId}
+          AND cic.user_id = #{userId}
+    </delete>
+
+    <delete id="deleteByTripId">
+        DELETE cic
+        FROM cooperative_item_checks cic
+        INNER JOIN cooperative_items ci ON cic.item_id = ci.id
+        WHERE ci.trip_id = #{tripId}
+    </delete>
+
+    <delete id="deleteByItemIdAndUserId">
+        DELETE FROM cooperative_item_checks
+        WHERE item_id = #{itemId} AND user_id = #{userId}
+    </delete>
+
+</mapper>

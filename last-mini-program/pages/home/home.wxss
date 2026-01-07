@@ -1,0 +1,4132 @@
+/* pages/home/home.wxss */
+.home-container {
+  padding-bottom: 80px;
+  background: #f8fafc;
+  position: relative;
+}
+.guest-mode-badge {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+    background: rgba(255, 152, 0, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+  }
+  
+  .guest-mode-text {
+    color: white;
+    font-size: 12px;
+  }
+.welcome-banner {
+  margin: 16px 16px 20px;
+  border-radius: 28px;
+  /* 舒服的蓝紫渐变 */
+  background: linear-gradient(135deg, #4f7cff 0%, #6a88ff 40%, #9a8dff 100%);
+  padding: 32px 20px 40px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 34px rgba(111, 150, 255, 0.35);
+}
+
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(30px, 30px) rotate(180deg);
+  }
+}
+
+.banner-content {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.banner-text {
+  text-align: center;
+}
+
+.banner-title {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.banner-subtitle {
+  display: block;
+  font-size: 15px;
+  opacity: 0.95;
+  margin-bottom: 32px;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+.banner-btn {
+  width: 220px;
+  height: 48px;
+  line-height: 32px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.banner-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.features {
+  display: flex;
+  gap: 16px;
+  padding: 24px 20px;
+}
+
+.feature-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.feature-card:active {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.feature-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #303133;
+  letter-spacing: 0.3px;
+}
+
+.feature-desc {
+  display: block;
+  font-size: 13px;
+  color: #909399;
+  line-height: 1.6;
+}
+
+.recent-trips {
+  padding: 24px 20px;
+  background: transparent;
+}
+
+/* 最近合作行程，与最近行程保持同样左右留白 */
+.recent-cooperative-trips {
+  padding: 24px 20px;
+  background: transparent;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #303133;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+.section-more {
+  font-size: 14px;
+  color: #667eea;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.section-more:active {
+  color: #764ba2;
+}
+
+.trip-list {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.trip-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #f0f2f5;
+  transition: all 0.3s ease;
+}
+
+.trip-item:last-child {
+  border-bottom: none;
+}
+
+.trip-item:active {
+  background: #fafbfc;
+  border-radius: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+}
+
+.trip-info {
+  flex: 1;
+}
+
+.trip-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trip-destination {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  color: #303133;
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+
+.trip-address {
+  display: block;
+  font-size: 14px;
+  color: #909399;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  letter-spacing: 0.2px;
+}
+
+.trip-date {
+  display: block;
+  font-size: 14px;
+  color: #909399;
+  margin-bottom: 6px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.trip-status-row {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.trip-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  text-align: center;
+}
+
+/* 不同状态的胶囊背景色 */
+.status-preparing {
+  background: rgba(230, 162, 60, 0.16);
+  color: #e6a23c;
+}
+
+.status-ongoing {
+  background: rgba(64, 158, 255, 0.14);
+  color: #409eff;
+}
+
+.status-completed {
+  background: rgba(103, 194, 58, 0.16);
+  color: #67c23a;
+}
+
+.status-cancelled {
+  background: rgba(245, 108, 108, 0.16);
+  color: #f56c6c;
+}
+
+.cooperative-tag {
+  font-size: 11px;
+  color: #409eff;
+  font-weight: 600;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #ecf5ff 0%, #e6f7ff 100%);
+  border-radius: 999px;
+  border: 1px solid rgba(64, 158, 255, 0.35);
+}
+
+.trip-btn {
+  margin-left: 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.trip-btn:active {
+  transform: scale(0.95);
+}
+
+/* 空页面容器（当完全没有行程时） */
+.empty-page-container {
+  padding: 20px 16px 60px;
+}
+
+.empty-page-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 20px;
+}
+
+.empty-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: 0.5px;
+}
+
+/* 空状态容器 */
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* 空状态图标容器 */
+.empty-state-icon-wrapper {
+  margin-bottom: 32px;
+}
+
+.empty-state-icon-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+}
+
+/* MapPinned 图标 - 使用CSS绘制 */
+.empty-state-location-icon {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2306b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* 空状态文本 */
+.empty-state-main-text {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.empty-state-sub-text {
+  display: block;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+/* 空状态按钮 */
+.empty-state-primary-btn {
+  width: 280px;
+  height: 48px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #4f7cff 0%, #6a88ff 50%, #9a8dff 100%);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(79, 124, 255, 0.35);
+  transition: all 0.3s ease;
+}
+
+.empty-state-primary-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 16px rgba(79, 124, 255, 0.3);
+}
+
+.empty-state-primary-btn::after {
+  border: none;
+}
+
+.empty-state-secondary-btn {
+  width: 280px;
+  height: 48px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.empty-state-secondary-btn:active {
+  transform: scale(0.98);
+  background: #f9fafb;
+}
+
+.empty-state-secondary-btn::after {
+  border: none;
+}
+
+.empty-state-btn-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.empty-state-btn-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.empty-state-secondary-btn .empty-state-btn-text {
+  color: #1f2937;
+}
+
+/* 旧样式保留（用于合作行程空状态） */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #909399;
+}
+
+.empty-btn {
+  margin-top: 20px;
+  border-radius: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.empty-secondary-btn {
+  margin-top: 16px;
+  border-radius: 999px;
+  font-size: 26rpx;
+  color: #606266;
+  background: #f4f4f5;
+  border: none;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 24px 20px;
+}
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 10px;
+  border-radius: 16px;
+  background: transparent;
+}
+
+.action-card:active {
+  transform: translateY(-2px);
+}
+
+.action-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 10px;
+  color: #fff;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.12);
+}
+
+.action-card:nth-child(1) .action-icon {
+  background: #fdeecf;
+  color: #d8851a;
+}
+
+.action-card:nth-child(2) .action-icon {
+  background: #f2e8ff;
+  color: #7037c1;
+}
+
+.action-card:nth-child(3) .action-icon {
+  background: #e0f4ff;
+  color: #1c6ecf;
+}
+
+.action-card:nth-child(4) .action-icon {
+  background: #ecf0f5;
+  color: #5f6772;
+}
+
+.action-text {
+  font-size: 14px;
+  color: #303133;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ========== Wanderlust 主题 ========== */
+
+.wanderlust-header {
+  padding: 24px 20px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wanderlust-header-left {
+  flex: 1;
+}
+
+.wanderlust-hello {
+  font-size: 12px;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.wanderlust-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.wanderlust-title-line {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.wanderlust-title-highlight {
+  background: linear-gradient(90deg, #06b6d4 0%, #2563eb 45%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.wanderlust-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.wanderlust-hero {
+  margin: 0 16px 20px;
+  height: 180px;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+}
+
+.wanderlust-hero-img {
+  width: 100%;
+  height: 100%;
+}
+
+.wanderlust-hero-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25), transparent);
+}
+
+.wanderlust-hero-content {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  color: #fff;
+}
+
+.wanderlust-hero-chip {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: #06b6d4;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(6, 182, 212, 0.6);
+}
+
+.wanderlust-hero-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.wanderlust-hero-sub {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(249, 250, 251, 0.9);
+}
+
+.wanderlust-hero-icon {
+  margin-right: 4px;
+}
+
+/* 灵感推荐 Hero Section（无行程时显示） */
+.wanderlust-hero-inspiration {
+  margin: 0 16px 20px;
+  height: 180px;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+}
+
+.wanderlust-hero-inspiration-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.wanderlust-hero-inspiration-bg {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  z-index: 1;
+  /* 移除红色滤镜，直接显示图片 */
+}
+
+.wanderlust-hero-inspiration-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25), transparent);
+}
+
+.wanderlust-hero-inspiration-content {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+.wanderlust-hero-inspiration-badge {
+  position: absolute;
+  top: 75px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: rgba(214, 211, 209, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.wanderlust-hero-inspiration-badge-icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.wanderlust-hero-inspiration-badge-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.wanderlust-hero-inspiration-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.wanderlust-hero-inspiration-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.5;
+}
+
+.wanderlust-hero-inspiration-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.wanderlust-hero-inspiration-btn-arrow {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.wanderlust-toolbox {
+  padding: 8px 16px 20px;
+}
+
+.wanderlust-toolbox-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.wanderlust-toolbox-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.wanderlust-tool-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 6px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+  align-items: center;
+}
+
+.tool-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tool-icon-plus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
+}
+
+.tool-icon-ticket {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2316a34a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z'/%3E%3Cpath d='M13 5v2'/%3E%3Cpath d='M13 17v2'/%3E%3Cpath d='M13 11v2'/%3E%3C/svg%3E");
+}
+
+.tool-icon-handshake {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m11 17 2 2a1 1 0 1 0 3-3'/%3E%3Cpath d='m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4'/%3E%3Cpath d='m21 3 1 11h-2'/%3E%3Cpath d='M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3'/%3E%3Cpath d='M3 4h8'/%3E%3C/svg%3E");
+}
+
+.tool-icon-compass {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ea580c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E");
+}
+
+.tool-icon-blue {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.tool-icon-green {
+  background-color: #ecfdf5;
+  color: #16a34a;
+}
+
+.tool-icon-orange {
+  background-color: #fff7ed;
+  color: #ea580c;
+}
+
+.tool-icon-purple {
+  background-color: #f5f3ff;
+  color: #7c3aed;
+}
+
+.tool-text-main {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.tool-text-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.wanderlust-section {
+  padding: 8px 16px 4px;
+}
+
+.wanderlust-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.wanderlust-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.wanderlust-section-more {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.wanderlust-trip-card {
+  margin-bottom: 14px;
+  height: 224px;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.22);
+}
+
+.wanderlust-trip-bg {
+  width: 100%;
+  height: 100%;
+}
+
+.wanderlust-trip-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1), transparent);
+}
+
+.wanderlust-trip-glass {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6), transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.wanderlust-trip-content {
+  position: absolute;
+  left: 24px;
+  right: 80px;
+  bottom: 24px;
+  color: #ffffff;
+  z-index: 2;
+}
+
+.wanderlust-trip-type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.wanderlust-trip-type-icon {
+  transform: translate(-3px, 58px);
+  width: 14px;
+  height: 14px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.wanderlust-trip-type-icon-tourism {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+}
+
+.wanderlust-trip-type-icon-business {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2' ry='2'/%3E%3Cpath d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3C/svg%3E");
+}
+
+.wanderlust-trip-type-icon-family {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+}
+
+.wanderlust-trip-type-icon-other {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/%3E%3Cpolyline points='3.27 6.96 12 12.01 20.73 6.96'/%3E%3Cline x1='12' y1='22.08' x2='12' y2='12'/%3E%3C/svg%3E");
+}
+
+/* 专门调试合作行程小图标 */
+.wanderlust-trip-type-icon-team {
+  transform: translate(-3px, 51px);
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.wanderlust-trip-type-text {
+transform: translate(-4px, 53px);
+  font-size: 11px;
+  font-weight: 700;
+  color: #a5f3fc;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.wanderlust-trip-title {
+  transform: translate(-2px, 17px);
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.wanderlust-trip-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  line-height: 1.4;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+/* 行程卡片中的地图定位图标 */
+.wanderlust-trip-location-icon {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.85)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  background-size: 14px 14px;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-top: 1px;
+}
+
+.wanderlust-trip-meta {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.wanderlust-trip-meta-destination {
+  flex-shrink: 1;
+  max-width: 50%;
+}
+
+.wanderlust-trip-meta-date {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.wanderlust-trip-meta-dot {
+  display: inline-block;
+  transform: translateY(8px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+  vertical-align: middle;
+  font-size: 0;
+}
+
+.wanderlust-trip-arrow {
+  position: absolute;
+  right: 20px;
+  bottom: 24px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.wanderlust-trip-arrow-icon {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.wanderlust-trip-status-chip {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.wanderlust-trip-status-chip.status-preparing {
+  background: rgba(6, 182, 212, 0.8);
+  color: #ffffff;
+}
+
+.wanderlust-trip-status-chip.status-other {
+  background: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wanderlust-trip-top-badges {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wanderlust-trip-coop-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.wanderlust-trip-coop-chip {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+/* ========== Neo 新粗野主义主题 ========== */
+.layout-neo {
+  background: #ffffff;
+}
+
+.neo-hero {
+  margin: 18px 16px;
+  padding: 20px 16px;
+  border-radius: 0;
+  border: 2px solid #000;
+  background: #ffffff;
+  position: relative;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+  overflow: hidden;
+}
+
+.neo-hero-bg-circle {
+  position: absolute;
+  border-radius: 999px;
+  border: 2px solid #000;
+}
+
+.neo-hero-bg-1 {
+  width: 80px;
+  height: 80px;
+  background: #ff90e8;
+  top: -20px;
+  right: -10px;
+}
+
+.neo-hero-bg-2 {
+  width: 60px;
+  height: 60px;
+  background: #22c55e;
+  bottom: -20px;
+  left: -10px;
+}
+
+.neo-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.neo-hero-title {
+  font-size: 24px;
+  font-weight: 900;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.neo-hero-subtitle {
+  display: inline-block;
+  font-weight: 700;
+  border-bottom: 2px solid #000;
+  margin-bottom: 14px;
+}
+
+.neo-hero-btn {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 0;
+  background: #ffdc00;
+  border: 2px solid #000;
+  font-size: 18px;
+  font-weight: 900;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+}
+
+.neo-grid-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.neo-grid-card {
+  border: 2px solid #000;
+  padding: 12px;
+  background: #fff;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.neo-grid-green {
+  background: #23a094;
+  color: #fff;
+}
+
+.neo-grid-pink {
+  background: #ff90e8;
+  color: #000;
+}
+
+.neo-grid-wide {
+  grid-column: span 2;
+  height: 80px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.neo-grid-icon {
+  font-size: 28px;
+}
+
+.neo-grid-text {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.neo-grid-wide-text {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.neo-grid-wide-icon {
+  font-size: 20px;
+  background: #000;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.neo-section-header {
+  padding: 10px 16px 4px;
+  border-bottom: 3px solid #000;
+  margin: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.neo-section-title {
+  font-size: 18px;
+  font-weight: 900;
+  background: #000;
+  color: #fff;
+  padding: 2px 8px;
+}
+
+.neo-section-more {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.neo-trip-card {
+  margin: 10px 16px;
+  border: 2px solid #000;
+  background: #fff;
+  display: flex;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+}
+
+.neo-status-bar {
+  width: 30px;
+  border-right: 2px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: #fff;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.neo-status-bar-grey {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.neo-status-text {
+  transform: rotate(180deg);
+}
+
+.neo-trip-main {
+  flex: 1;
+  padding: 8px 10px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.neo-trip-left {
+  max-width: 70%;
+}
+
+.neo-trip-name {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.neo-trip-date-label {
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.neo-trip-date {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 4px;
+  background: #000;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.neo-trip-btn {
+  font-size: 12px;
+  font-weight: 900;
+  border: none;
+  border-bottom: 2px solid #000;
+  background: transparent;
+}
+
+/* ========== Zen 森系极简主题 ========== */
+.layout-zen {
+  background: #fafaf9;
+}
+
+.zen-top-nav {
+  padding: 14px 16px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zen-feather {
+  font-size: 16px;
+  color: #57534e;
+}
+
+.zen-nav-title {
+  font-size: 16px;
+  font-style: italic;
+  color: #78716c;
+}
+
+.zen-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #e7e5e4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d6d3d1;
+  font-size: 12px;
+  color: #57534e;
+}
+
+.zen-hero {
+  padding: 12px 16px 22px;
+  text-align: center;
+}
+
+.zen-hero-date {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #a8a29e;
+  margin-bottom: 6px;
+}
+
+.zen-hero-title {
+  font-size: 26px;
+  margin-bottom: 4px;
+  color: #292524;
+}
+
+.zen-hero-quote {
+  font-size: 13px;
+  color: #78716c;
+  font-style: italic;
+}
+
+.zen-hero-card {
+  margin: 0 16px 16px;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.zen-hero-img {
+  width: 100%;
+  height: 100%;
+}
+
+.zen-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.zen-hero-text-box {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  color: #fff;
+}
+
+.zen-hero-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.zen-hero-text-main {
+  font-size: 20px;
+}
+
+.zen-hero-plus {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.zen-two-cards {
+  padding: 4px 16px 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.zen-small-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.zen-small-icon {
+  font-size: 18px;
+  color: #78716c;
+  margin-bottom: 8px;
+}
+
+.zen-small-title {
+  font-size: 15px;
+  color: #44403c;
+  margin-bottom: 2px;
+}
+
+.zen-small-sub {
+  font-size: 11px;
+  color: #a8a29e;
+}
+
+.zen-section-header {
+  padding: 12px 16px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zen-section-title {
+  font-size: 15px;
+  color: #44403c;
+}
+
+.zen-section-more {
+  font-size: 11px;
+  color: #a8a29e;
+}
+
+.zen-trip-card {
+  margin: 4px 16px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  border-left: 2px solid transparent;
+}
+
+.zen-trip-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #f5f5f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.zen-trip-main {
+  flex: 1;
+}
+
+.zen-trip-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.zen-trip-name {
+  font-size: 16px;
+  color: #44403c;
+}
+
+.zen-status-pill {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  border: 1px solid #e7e5e4;
+}
+
+.zen-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #22c55e;
+  margin-right: 4px;
+}
+
+.zen-status-text {
+  font-size: 10px;
+  color: #78716c;
+}
+
+.zen-trip-date {
+  font-size: 11px;
+  color: #78716c;
+  font-style: italic;
+}
+
+/* ========== Paper 手账主题 ========== */
+.layout-paper {
+  background: #fffaf1;
+}
+
+.paper-hero {
+  margin: 18px 20px 12px 32px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  padding: 14px 14px 16px;
+  position: relative;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.08);
+}
+
+.paper-spiral {
+  position: absolute;
+  top: 10px;
+  left: -16px;
+  width: 18px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.paper-spiral-hole {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  box-shadow: inset 0 0 0 2px #fff;
+}
+
+.paper-hero-inner {
+  padding-left: 4px;
+}
+
+.paper-hero-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.paper-hero-title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.paper-hero-pen {
+  font-size: 18px;
+  color: #9ca3af;
+}
+
+.paper-hero-line {
+  height: 1px;
+  background: #dbeafe;
+  margin: 4px 0 8px;
+}
+
+.paper-hero-quote {
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.paper-hero-btn {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 6px;
+  background: #fef3c7;
+  border: 1px solid #facc15;
+  font-size: 14px;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.paper-sticky-grid {
+  padding: 8px 16px 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.paper-sticky {
+  padding: 10px 10px 12px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.paper-sticky-tape {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(254, 249, 195, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.paper-sticky.pink {
+  background: #fdf2f8;
+  color: #be185d;
+}
+
+.paper-sticky.green {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.paper-sticky.purple {
+  grid-column: span 2;
+  background: #f5f3ff;
+  color: #6d28d9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paper-sticky-icon {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.paper-sticky-text {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.paper-sticky-eye {
+  font-size: 18px;
+}
+
+.paper-section-header {
+  padding: 10px 16px 4px;
+  border-bottom: 1px dashed #d1d5db;
+}
+
+.paper-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.paper-trip-card {
+  margin: 10px 16px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: #fbfdff;
+  position: relative;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.06);
+}
+
+.paper-trip-inner {
+  padding: 10px 14px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.paper-corner-shadow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(to top left, rgba(156, 163, 175, 0.4), transparent);
+}
+
+.paper-corner-fold {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-right: 16px solid rgba(255, 255, 255, 0.9);
+}
+
+.paper-trip-main {
+  position: relative;
+  z-index: 1;
+}
+
+.paper-trip-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.paper-trip-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.paper-trip-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.paper-trip-icon-wrap {
+  margin-right: 14px;
+}
+
+.paper-trip-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid #111827;
+  background: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  box-shadow: 2px 2px 0 rgba(15, 23, 42, 0.35);
+}
+
+.paper-trip-icon-coop {
+  background: #f3e8ff;
+}
+
+.paper-trip-title-row {
+  margin-bottom: 4px;
+}
+
+.paper-stamp {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: double;
+  border-color: #9ca3af;
+  color: #4b5563;
+}
+
+.paper-stamp-preparing {
+  border-color: #f97373;
+  color: #d32f2f;
+  background: rgba(248, 113, 113, 0.06);
+}
+
+.paper-stamp-completed {
+  border-color: #cbd5e1;
+  color: #94a3b8;
+}
+
+.paper-coop-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #a855f7;
+  color: #7c3aed;
+}
+
+.paper-trip-meta {
+  margin-bottom: 8px;
+  border-top: 1px dashed #e5e7eb;
+  padding-top: 4px;
+}
+
+.paper-trip-meta-line {
+  display: block;
+  font-size: 12px;
+  color: #4b5563;
+  margin-top: 2px;
+}
+
+.paper-trip-btn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.paper-trip-right {
+  width: 82px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.paper-status-ribbon {
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.paper-status-preparing {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.paper-status-other {
+  border-color: #e5e7eb;
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+.paper-status-coop {
+  border-color: #e9d5ff;
+  color: #7c3aed;
+  background: #f5f3ff;
+}
+
+.paper-open-btn {
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paper-open-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-right: 4px;
+}
+.paper-open-arrow {
+  font-size: 12px;
+  color: #2563eb;
+}
+
+
+
+/* pages/home/home.wxss */
+.home-container {
+  padding-bottom: 80px;
+  background: linear-gradient(180deg, #f0f4f8 0%, #ffffff 100%);
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 48px 24px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(30px, 30px) rotate(180deg);
+  }
+}
+
+.banner-content {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.banner-text {
+  text-align: center;
+}
+
+.banner-title {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.banner-subtitle {
+  display: block;
+  font-size: 15px;
+  opacity: 0.95;
+  margin-bottom: 32px;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+.banner-btn {
+  width: 220px;
+  height: 48px;
+  line-height: 32px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.banner-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.features {
+  display: flex;
+  gap: 16px;
+  padding: 24px 20px;
+}
+
+.feature-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.feature-card:active {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.feature-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #303133;
+  letter-spacing: 0.3px;
+}
+
+.feature-desc {
+  display: block;
+  font-size: 13px;
+  color: #909399;
+  line-height: 1.6;
+}
+
+.recent-trips {
+  padding: 24px 20px;
+  background: transparent;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #303133;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+.section-more {
+  font-size: 14px;
+  color: #667eea;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.section-more:active {
+  color: #764ba2;
+}
+
+.trip-list {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.trip-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #f0f2f5;
+  transition: all 0.3s ease;
+}
+
+.trip-item:last-child {
+  border-bottom: none;
+}
+
+.trip-item:active {
+  background: #fafbfc;
+  border-radius: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+}
+
+.trip-info {
+  flex: 1;
+}
+
+.trip-destination {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  color: #303133;
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+
+.trip-address {
+  display: block;
+  font-size: 12px;
+  color: #909399;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  letter-spacing: 0.2px;
+}
+
+.trip-date {
+  display: block;
+  font-size: 13px;
+  color: #909399;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.trip-status {
+  display: inline-block;
+  font-size: 12px;
+  color: #667eea;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #ecf5ff 0%, #e6f7ff 100%);
+  border-radius: 12px;
+}
+
+.trip-btn {
+  margin-left: 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.trip-btn:active {
+  transform: scale(0.95);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #909399;
+}
+
+.empty-btn {
+  margin-top: 20px;
+  border-radius: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.empty-secondary-btn {
+  margin-top: 16px;
+  border-radius: 999px;
+  font-size: 26rpx;
+  color: #606266;
+  background: #f4f4f5;
+  border: none;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 14px;
+  padding: 24px 20px;
+  background: transparent;
+}
+
+.action-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.action-card:active {
+  transform: translateY(-4px) scale(0.98);
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.15);
+}
+
+.action-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.action-text {
+  display: block;
+  font-size: 13px;
+  color: #606266;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+
+
+.empty-page-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 20px;
+}
+
+.empty-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: 0.5px;
+}
+
+/* 空状态容器 */
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* 空状态图标容器 */
+.empty-state-icon-wrapper {
+  margin-bottom: 32px;
+}
+
+.empty-state-icon-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+}
+
+/* MapPinned 图标 - 使用CSS绘制 */
+.empty-state-location-icon {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2306b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* 空状态文本 */
+.empty-state-main-text {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.empty-state-sub-text {
+  display: block;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+/* 空状态按钮 */
+.empty-state-primary-btn {
+  width: 280px;
+  height: 48px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #4f7cff 0%, #6a88ff 50%, #9a8dff 100%);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(79, 124, 255, 0.35);
+  transition: all 0.3s ease;
+}
+
+.empty-state-primary-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 16px rgba(79, 124, 255, 0.3);
+}
+
+.empty-state-primary-btn::after {
+  border: none;
+}
+
+.empty-state-secondary-btn {
+  width: 280px;
+  height: 48px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.empty-state-secondary-btn:active {
+  transform: scale(0.98);
+  background: #f9fafb;
+}
+
+.empty-state-secondary-btn::after {
+  border: none;
+}
+
+.empty-state-btn-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.empty-state-btn-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.empty-state-secondary-btn .empty-state-btn-text {
+  color: #1f2937;
+}
+
+/* 旧样式保留（用于合作行程空状态） */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #909399;
+}
+
+.empty-btn {
+  margin-top: 20px;
+  border-radius: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.empty-secondary-btn {
+  margin-top: 16px;
+  border-radius: 999px;
+  font-size: 26rpx;
+  color: #606266;
+  background: #f4f4f5;
+  border: none;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 24px 20px;
+}
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 10px;
+  border-radius: 16px;
+  background: transparent;
+}
+
+.action-card:active {
+  transform: translateY(-2px);
+}
+
+.action-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 10px;
+  color: #fff;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.12);
+}
+
+.action-card:nth-child(1) .action-icon {
+  background: #fdeecf;
+  color: #d8851a;
+}
+
+.action-card:nth-child(2) .action-icon {
+  background: #f2e8ff;
+  color: #7037c1;
+}
+
+.action-card:nth-child(3) .action-icon {
+  background: #e0f4ff;
+  color: #1c6ecf;
+}
+
+.action-card:nth-child(4) .action-icon {
+  background: #ecf0f5;
+  color: #5f6772;
+}
+
+.action-text {
+  font-size: 14px;
+  color: #303133;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ========== Wanderlust 主题 ========== */
+
+.wanderlust-header {
+  padding: 24px 20px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wanderlust-header-left {
+  flex: 1;
+}
+
+.wanderlust-hello {
+  font-size: 12px;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.wanderlust-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.wanderlust-title-line {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.wanderlust-title-highlight {
+  background: linear-gradient(90deg, #06b6d4 0%, #2563eb 45%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.wanderlust-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.wanderlust-hero {
+  margin: 0 16px 20px;
+  height: 180px;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+}
+
+.wanderlust-hero-img {
+  width: 100%;
+  height: 100%;
+}
+
+.wanderlust-hero-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25), transparent);
+}
+
+.wanderlust-hero-content {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  color: #fff;
+}
+
+.wanderlust-hero-chip {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: #06b6d4;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(6, 182, 212, 0.6);
+}
+
+.wanderlust-hero-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.wanderlust-hero-sub {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(249, 250, 251, 0.9);
+}
+
+.wanderlust-hero-icon {
+  margin-right: 4px;
+}
+
+/* 灵感推荐 Hero Section（无行程时显示） */
+.wanderlust-hero-inspiration {
+  margin: 0 16px 20px;
+  height: 180px;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+}
+
+.wanderlust-hero-inspiration-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.wanderlust-hero-inspiration-bg {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  z-index: 1;
+  /* 移除红色滤镜，直接显示图片 */
+}
+
+.wanderlust-hero-inspiration-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25), transparent);
+}
+
+.wanderlust-hero-inspiration-content {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+.wanderlust-hero-inspiration-badge {
+  position: absolute;
+  top: 75px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: rgba(214, 211, 209, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.wanderlust-hero-inspiration-badge-icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.wanderlust-hero-inspiration-badge-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.wanderlust-hero-inspiration-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.wanderlust-hero-inspiration-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.5;
+}
+
+.wanderlust-hero-inspiration-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.wanderlust-hero-inspiration-btn-arrow {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.wanderlust-toolbox {
+  padding: 8px 16px 20px;
+}
+
+.wanderlust-toolbox-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.wanderlust-toolbox-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.wanderlust-tool-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 6px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+  align-items: center;
+}
+
+.tool-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tool-icon-plus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
+}
+
+.tool-icon-ticket {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2316a34a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z'/%3E%3Cpath d='M13 5v2'/%3E%3Cpath d='M13 17v2'/%3E%3Cpath d='M13 11v2'/%3E%3C/svg%3E");
+}
+
+.tool-icon-handshake {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m11 17 2 2a1 1 0 1 0 3-3'/%3E%3Cpath d='m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4'/%3E%3Cpath d='m21 3 1 11h-2'/%3E%3Cpath d='M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3'/%3E%3Cpath d='M3 4h8'/%3E%3C/svg%3E");
+}
+
+.tool-icon-compass {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ea580c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E");
+}
+
+.tool-icon-blue {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.tool-icon-green {
+  background-color: #ecfdf5;
+  color: #16a34a;
+}
+
+.tool-icon-orange {
+  background-color: #fff7ed;
+  color: #ea580c;
+}
+
+.tool-icon-purple {
+  background-color: #f5f3ff;
+  color: #7c3aed;
+}
+
+.tool-text-main {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.tool-text-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.wanderlust-section {
+  padding: 8px 16px 4px;
+}
+
+.wanderlust-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.wanderlust-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.wanderlust-section-more {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.wanderlust-trip-card {
+  margin-bottom: 14px;
+  height: 224px;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.22);
+}
+
+.wanderlust-trip-bg {
+  width: 100%;
+  height: 100%;
+}
+
+.wanderlust-trip-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1), transparent);
+}
+
+.wanderlust-trip-glass {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6), transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.wanderlust-trip-content {
+  position: absolute;
+  left: 24px;
+  right: 80px;
+  bottom: 24px;
+  color: #ffffff;
+  z-index: 2;
+}
+
+.wanderlust-trip-type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.wanderlust-trip-type-icon {
+  transform: translate(-3px, 58px);
+  width: 14px;
+  height: 14px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.wanderlust-trip-type-icon-tourism {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+}
+
+.wanderlust-trip-type-icon-business {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2' ry='2'/%3E%3Cpath d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3C/svg%3E");
+}
+
+.wanderlust-trip-type-icon-family {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+}
+
+.wanderlust-trip-type-icon-other {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/%3E%3Cpolyline points='3.27 6.96 12 12.01 20.73 6.96'/%3E%3Cline x1='12' y1='22.08' x2='12' y2='12'/%3E%3C/svg%3E");
+}
+
+/* 专门调试合作行程小图标 */
+.wanderlust-trip-type-icon-team {
+  transform: translate(-3px, 51px);
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.wanderlust-trip-type-text {
+transform: translate(-4px, 53px);
+  font-size: 11px;
+  font-weight: 700;
+  color: #a5f3fc;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.wanderlust-trip-title {
+  transform: translate(-2px, 17px);
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.wanderlust-trip-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  line-height: 1.4;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+/* 行程卡片中的地图定位图标 */
+.wanderlust-trip-location-icon {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.85)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  background-size: 14px 14px;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-top: 1px;
+  transform: translateY(7.5px);
+}
+
+.wanderlust-trip-meta {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.wanderlust-trip-meta-destination {
+  flex-shrink: 1;
+  max-width: 50%;
+}
+
+.wanderlust-trip-meta-date {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.wanderlust-trip-meta-dot {
+  display: inline-block;
+  transform: translateY(8px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+  vertical-align: middle;
+  font-size: 0;
+}
+
+.wanderlust-trip-arrow {
+  position: absolute;
+  right: 20px;
+  bottom: 24px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.wanderlust-trip-arrow-icon {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.wanderlust-trip-status-chip {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.wanderlust-trip-status-chip.status-preparing {
+  background: rgba(6, 182, 212, 0.8);
+  color: #ffffff;
+}
+
+.wanderlust-trip-status-chip.status-other {
+  background: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wanderlust-trip-top-badges {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wanderlust-trip-coop-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.wanderlust-trip-coop-chip {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+/* ========== Neo 新粗野主义主题 ========== */
+.layout-neo {
+  background: #ffffff;
+}
+
+.neo-hero {
+  margin: 18px 16px;
+  padding: 20px 16px;
+  border-radius: 0;
+  border: 2px solid #000;
+  background: #ffffff;
+  position: relative;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+  overflow: hidden;
+}
+
+.neo-hero-bg-circle {
+  position: absolute;
+  border-radius: 999px;
+  border: 2px solid #000;
+}
+
+.neo-hero-bg-1 {
+  width: 80px;
+  height: 80px;
+  background: #ff90e8;
+  top: -20px;
+  right: -10px;
+}
+
+.neo-hero-bg-2 {
+  width: 60px;
+  height: 60px;
+  background: #22c55e;
+  bottom: -20px;
+  left: -10px;
+}
+
+.neo-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.neo-hero-title {
+  font-size: 24px;
+  font-weight: 900;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.neo-hero-subtitle {
+  display: inline-block;
+  font-weight: 700;
+  border-bottom: 2px solid #000;
+  margin-bottom: 14px;
+}
+
+.neo-hero-btn {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 0;
+  background: #ffdc00;
+  border: 2px solid #000;
+  font-size: 18px;
+  font-weight: 900;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+}
+
+.neo-grid-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.neo-grid-card {
+  border: 2px solid #000;
+  padding: 12px;
+  background: #fff;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.neo-grid-green {
+  background: #23a094;
+  color: #fff;
+}
+
+.neo-grid-pink {
+  background: #ff90e8;
+  color: #000;
+}
+
+.neo-grid-wide {
+  grid-column: span 2;
+  height: 80px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.neo-grid-icon {
+  font-size: 28px;
+}
+
+.neo-grid-text {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.neo-grid-wide-text {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.neo-grid-wide-icon {
+  font-size: 20px;
+  background: #000;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.neo-section-header {
+  padding: 10px 16px 4px;
+  border-bottom: 3px solid #000;
+  margin: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.neo-section-title {
+  font-size: 18px;
+  font-weight: 900;
+  background: #000;
+  color: #fff;
+  padding: 2px 8px;
+}
+
+.neo-section-more {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.neo-trip-card {
+  margin: 10px 16px;
+  border: 2px solid #000;
+  background: #fff;
+  display: flex;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+}
+
+.neo-status-bar {
+  width: 30px;
+  border-right: 2px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: #fff;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.neo-status-bar-grey {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.neo-status-text {
+  transform: rotate(180deg);
+}
+
+.neo-trip-main {
+  flex: 1;
+  padding: 8px 10px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.neo-trip-left {
+  max-width: 70%;
+}
+
+.neo-trip-name {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.neo-trip-date-label {
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.neo-trip-date {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 4px;
+  background: #000;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.neo-trip-btn {
+  font-size: 12px;
+  font-weight: 900;
+  border: none;
+  border-bottom: 2px solid #000;
+  background: transparent;
+}
+
+/* ========== Zen 森系极简主题 ========== */
+.layout-zen {
+  background: #fafaf9;
+}
+
+.zen-top-nav {
+  padding: 14px 16px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zen-feather {
+  font-size: 16px;
+  color: #57534e;
+}
+
+.zen-nav-title {
+  font-size: 16px;
+  font-style: italic;
+  color: #78716c;
+}
+
+.zen-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #e7e5e4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d6d3d1;
+  font-size: 12px;
+  color: #57534e;
+}
+
+.zen-hero {
+  padding: 12px 16px 22px;
+  text-align: center;
+}
+
+.zen-hero-date {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #a8a29e;
+  margin-bottom: 6px;
+}
+
+.zen-hero-title {
+  font-size: 26px;
+  margin-bottom: 4px;
+  color: #292524;
+}
+
+.zen-hero-quote {
+  font-size: 13px;
+  color: #78716c;
+  font-style: italic;
+}
+
+.zen-hero-card {
+  margin: 0 16px 16px;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.zen-hero-img {
+  width: 100%;
+  height: 100%;
+}
+
+.zen-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.zen-hero-text-box {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  color: #fff;
+}
+
+.zen-hero-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.zen-hero-text-main {
+  font-size: 20px;
+}
+
+.zen-hero-plus {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.zen-two-cards {
+  padding: 4px 16px 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.zen-small-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.zen-small-icon {
+  font-size: 18px;
+  color: #78716c;
+  margin-bottom: 8px;
+}
+
+.zen-small-title {
+  font-size: 15px;
+  color: #44403c;
+  margin-bottom: 2px;
+}
+
+.zen-small-sub {
+  font-size: 11px;
+  color: #a8a29e;
+}
+
+.zen-section-header {
+  padding: 12px 16px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zen-section-title {
+  font-size: 15px;
+  color: #44403c;
+}
+
+.zen-section-more {
+  font-size: 11px;
+  color: #a8a29e;
+}
+
+.zen-trip-card {
+  margin: 4px 16px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  border-left: 2px solid transparent;
+}
+
+.zen-trip-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #f5f5f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.zen-trip-main {
+  flex: 1;
+}
+
+.zen-trip-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.zen-trip-name {
+  font-size: 16px;
+  color: #44403c;
+}
+
+.zen-status-pill {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  border: 1px solid #e7e5e4;
+}
+
+.zen-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #22c55e;
+  margin-right: 4px;
+}
+
+.zen-status-text {
+  font-size: 10px;
+  color: #78716c;
+}
+
+.zen-trip-date {
+  font-size: 11px;
+  color: #78716c;
+  font-style: italic;
+}
+
+/* ========== Paper 手账主题 ========== */
+.layout-paper {
+  background: #fffaf1;
+}
+
+.paper-hero {
+  margin: 18px 20px 12px 32px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  padding: 14px 14px 16px;
+  position: relative;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.08);
+}
+
+.paper-spiral {
+  position: absolute;
+  top: 10px;
+  left: -16px;
+  width: 18px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.paper-spiral-hole {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  box-shadow: inset 0 0 0 2px #fff;
+}
+
+.paper-hero-inner {
+  padding-left: 4px;
+}
+
+.paper-hero-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.paper-hero-title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.paper-hero-pen {
+  font-size: 18px;
+  color: #9ca3af;
+}
+
+.paper-hero-line {
+  height: 1px;
+  background: #dbeafe;
+  margin: 4px 0 8px;
+}
+
+.paper-hero-quote {
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.paper-hero-btn {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 6px;
+  background: #fef3c7;
+  border: 1px solid #facc15;
+  font-size: 14px;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.paper-sticky-grid {
+  padding: 8px 16px 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.paper-sticky {
+  padding: 10px 10px 12px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.paper-sticky-tape {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(254, 249, 195, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.paper-sticky.pink {
+  background: #fdf2f8;
+  color: #be185d;
+}
+
+.paper-sticky.green {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.paper-sticky.purple {
+  grid-column: span 2;
+  background: #f5f3ff;
+  color: #6d28d9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paper-sticky-icon {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.paper-sticky-text {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.paper-sticky-eye {
+  font-size: 18px;
+}
+
+.paper-section-header {
+  padding: 10px 16px 4px;
+  border-bottom: 1px dashed #d1d5db;
+}
+
+.paper-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.paper-trip-card {
+  margin: 10px 16px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: #fbfdff;
+  position: relative;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.06);
+}
+
+.paper-trip-inner {
+  padding: 10px 14px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.paper-corner-shadow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(to top left, rgba(156, 163, 175, 0.4), transparent);
+}
+
+.paper-corner-fold {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-right: 16px solid rgba(255, 255, 255, 0.9);
+}
+
+.paper-trip-main {
+  position: relative;
+  z-index: 1;
+}
+
+.paper-trip-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.paper-trip-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.paper-trip-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.paper-trip-icon-wrap {
+  margin-right: 14px;
+}
+
+.paper-trip-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid #111827;
+  background: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  box-shadow: 2px 2px 0 rgba(15, 23, 42, 0.35);
+}
+
+.paper-trip-icon-coop {
+  background: #f3e8ff;
+}
+
+.paper-trip-title-row {
+  margin-bottom: 4px;
+}
+
+.paper-stamp {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: double;
+  border-color: #9ca3af;
+  color: #4b5563;
+}
+
+.paper-stamp-preparing {
+  border-color: #f97373;
+  color: #d32f2f;
+  background: rgba(248, 113, 113, 0.06);
+}
+
+.paper-stamp-completed {
+  border-color: #cbd5e1;
+  color: #94a3b8;
+}
+
+.paper-coop-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #a855f7;
+  color: #7c3aed;
+}
+
+.paper-trip-meta {
+  margin-bottom: 8px;
+  border-top: 1px dashed #e5e7eb;
+  padding-top: 4px;
+}
+
+.paper-trip-meta-line {
+  display: block;
+  font-size: 12px;
+  color: #4b5563;
+  margin-top: 2px;
+}
+
+.paper-trip-btn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.paper-trip-right {
+  width: 82px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.paper-status-ribbon {
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.paper-status-preparing {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.paper-status-other {
+  border-color: #e5e7eb;
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+.paper-status-coop {
+  border-color: #e9d5ff;
+  color: #7c3aed;
+  background: #f5f3ff;
+}
+
+.paper-open-btn {
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paper-open-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-right: 4px;
+}
+.paper-open-arrow {
+  font-size: 12px;
+  color: #2563eb;
+}
+
+
+
+/* pages/home/home.wxss */
+.home-container {
+  padding-bottom: 80px;
+  background: linear-gradient(180deg, #f0f4f8 0%, #ffffff 100%);
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 48px 24px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(30px, 30px) rotate(180deg);
+  }
+}
+
+.banner-content {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.banner-text {
+  text-align: center;
+}
+
+.banner-title {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.banner-subtitle {
+  display: block;
+  font-size: 15px;
+  opacity: 0.95;
+  margin-bottom: 32px;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+.banner-btn {
+  width: 220px;
+  height: 48px;
+  line-height: 32px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.banner-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.features {
+  display: flex;
+  gap: 16px;
+  padding: 24px 20px;
+}
+
+.feature-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.feature-card:active {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.feature-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #303133;
+  letter-spacing: 0.3px;
+}
+
+.feature-desc {
+  display: block;
+  font-size: 13px;
+  color: #909399;
+  line-height: 1.6;
+}
+
+.recent-trips {
+  padding: 24px 20px;
+  background: transparent;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #303133;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+.section-more {
+  font-size: 14px;
+  color: #667eea;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.section-more:active {
+  color: #764ba2;
+}
+
+.trip-list {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.trip-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #f0f2f5;
+  transition: all 0.3s ease;
+}
+
+.trip-item:last-child {
+  border-bottom: none;
+}
+
+.trip-item:active {
+  background: #fafbfc;
+  border-radius: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+}
+
+.trip-info {
+  flex: 1;
+}
+
+.trip-destination {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  color: #303133;
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+
+.trip-address {
+  display: block;
+  font-size: 12px;
+  color: #909399;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  letter-spacing: 0.2px;
+}
+
+.trip-date {
+  display: block;
+  font-size: 13px;
+  color: #909399;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.trip-status {
+  display: inline-block;
+  font-size: 12px;
+  color: #667eea;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #ecf5ff 0%, #e6f7ff 100%);
+  border-radius: 12px;
+}
+
+.trip-btn {
+  margin-left: 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.trip-btn:active {
+  transform: scale(0.95);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #909399;
+}
+
+.empty-btn {
+  margin-top: 20px;
+  border-radius: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.empty-secondary-btn {
+  margin-top: 16px;
+  border-radius: 999px;
+  font-size: 26rpx;
+  color: #606266;
+  background: #f4f4f5;
+  border: none;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 14px;
+  padding: 24px 20px;
+  background: transparent;
+}
+
+.action-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.action-card:active {
+  transform: translateY(-4px) scale(0.98);
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.15);
+}
+
+.action-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.action-text {
+  display: block;
+  font-size: 13px;
+  color: #606266;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}

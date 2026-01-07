@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "合作行程",
+  "usingComponents": {
+    "member-progress": "/components/member-progress/member-progress"
+  }
+}
+

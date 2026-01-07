@@ -1,0 +1,64 @@
+<view class="join-container">
+  <view class="token-card">
+    <text class="section-title">扫码口令</text>
+    <text class="section-desc">通过二维码打开页面会自动填充</text>
+    <view class="token-box">
+      {{token || '暂未获取口令，请扫描创建者分享的二维码'}}
+    </view>
+  </view>
+
+  <view class="code-card">
+    <text class="section-title">输入邀请码</text>
+    <text class="section-desc">也可以向创建人索取6位邀请码加入</text>
+    <view class="code-row">
+      <input
+        class="code-input"
+        placeholder="请输入6位邀请码"
+        maxlength="6"
+        value="{{inviteCode}}"
+        bindinput="onCodeInput"
+      />
+      <button class="code-check-btn" size="mini" bindtap="handlePreviewByCode">验证</button>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-block">
+    <text>正在验证邀请信息...</text>
+  </view>
+
+  <view wx:elif="{{inviteInfo && inviteInfo.trip}}" class="invite-preview">
+    <view class="preview-header">
+      <text class="preview-title">{{inviteInfo.trip.name || inviteInfo.trip.destination}}</text>
+      <text class="preview-tag">{{inviteInfo.inviteType === 'QR' ? '二维码邀请' : (inviteInfo.inviteType === 'WECHAT' ? '微信邀请' : '邀请码')}}</text>
+    </view>
+    <view class="preview-meta">
+      <text>📅 {{inviteInfo.trip.startDate || '--'}} ~ {{inviteInfo.trip.endDate || '--'}}</text>
+      <text>👥 人数 {{inviteInfo.trip.travelers || 0}}</text>
+      <text>📍 目的地 {{inviteInfo.trip.destination || '未填写'}}</text>
+    </view>
+    <text class="preview-expire" wx:if="{{inviteInfo.expiresAt}}">
+      邀请有效期至：{{inviteInfo.expiresAt}}
+    </text>
+    <button 
+      class="join-btn" 
+      type="primary" 
+      bindtap="applyJoin" 
+      loading="{{joinLoading}}"
+      disabled="{{joinLoading}}"
+    >
+      申请加入
+    </button>
+  </view>
+
+  <view wx:elif="{{errorMessage}}" class="invite-error">
+    <text>{{errorMessage}}</text>
+  </view>
+
+  <view wx:else class="guide-card">
+    <text class="guide-title">如何加入合作行程？</text>
+    <text class="guide-item">1. 扫描创建者分享的二维码，系统将自动填写口令。</text>
+    <text class="guide-item">2. 或让创建者分享6位邀请码，输入后点击验证。</text>
+    <text class="guide-item">3. 验证通过后点击“申请加入”即完成加入。</text>
+  </view>
+</view>
+

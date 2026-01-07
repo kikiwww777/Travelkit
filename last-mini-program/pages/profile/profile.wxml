@@ -1,0 +1,223 @@
+<!--pages/profile/profile.wxml-->
+<view class="profile-container">
+  
+  <!-- ==================== Profile Card & Stats ==================== -->
+  <view class="profile-card">
+    <!-- Decorative Bg -->
+    <view class="deco-bg"></view>
+
+    <!-- Header Content -->
+    <view class="profile-header">
+      <view class="avatar-wrapper">
+        <!-- Gradient Border -->
+        <view class="avatar-border">
+          <view class="avatar-inner">
+            <image 
+              wx:if="{{userInfo.avatar}}"
+              src="{{userInfo.avatar}}" 
+              class="avatar-img" 
+              mode="aspectFill"
+              bindtap="onAvatarTap"
+            />
+            <view wx:else class="avatar-placeholder" bindtap="onAvatarTap">👤</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="user-info">
+        <view class="user-name">{{userProfile.name || userInfo.name || '未设置'}}</view>
+        <view class="tags-row">
+          <view class="tag" wx:if="{{userProfile.gender || userInfo.gender}}">
+            <text>{{(userProfile.gender || userInfo.gender) === '男' ? '👨 男' : '👩 女'}}</text>
+          </view>
+          <view class="tag" wx:if="{{userProfile.birthday || userInfo.birthday}}">
+            <text>{{constellation || '巨蟹座'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Stats Row -->
+    <view class="stats-row">
+      <view class="stat-item border-r">
+        <view class="stat-num text-sky">{{stats.totalTrips || 0}}</view>
+        <view class="stat-label">总行程数</view>
+      </view>
+      <view class="stat-item border-r">
+        <view class="stat-num text-emerald">{{stats.completedTrips || 0}}</view>
+        <view class="stat-label">已完成</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-num text-dark">{{stats.days || 0}}</view>
+        <view class="stat-label">出行天数</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== Form Section ==================== -->
+  <view class="form-section">
+    <view class="section-title">
+      <image class="icon-user" src="{{iconUser}}" /> 
+      <text>个人信息</text>
+      <!-- Edit Button -->
+      <view 
+        class="edit-btn {{isProfileEditing ? 'btn-active' : 'btn-normal'}}" 
+        bindtap="toggleEdit"
+      >
+        <image class="icon-sm" src="{{isProfileEditing ? iconCheck : iconPen}}" />
+      </view>
+    </view>
+
+    <view class="form-card">
+      
+      <!-- Name Field -->
+      <view class="form-item border-b">
+        <text class="form-label">姓名 NAME</text>
+        <input 
+          class="form-input {{isProfileEditing ? 'input-active' : ''}}"
+          value="{{userProfile.name || userInfo.name}}"
+          disabled="{{!isProfileEditing}}"
+          bindinput="handleNameInput"
+          placeholder="请输入姓名"
+          placeholder-class="placeholder-style"
+        />
+      </view>
+
+      <!-- Gender Field (Picker) -->
+      <view class="form-item border-b">
+        <text class="form-label">性别 GENDER</text>
+        <picker 
+          mode="selector" 
+          range="{{['男', '女']}}" 
+          value="{{(userProfile.gender || userInfo.gender) === '男' ? 0 : 1}}"
+          disabled="{{!isProfileEditing}}"
+          bindchange="handleGenderChange"
+        >
+          <view class="picker-inner">
+            <text class="form-input {{isProfileEditing ? 'input-active' : ''}}">{{userProfile.gender || userInfo.gender || '请选择'}}</text>
+            <image wx:if="{{isProfileEditing}}" class="icon-chevron" src="{{iconChevronDown}}" />
+          </view>
+        </picker>
+      </view>
+
+      <!-- Birthday Field (Picker) -->
+      <view class="form-item border-b">
+        <text class="form-label">生日 BIRTHDAY</text>
+        <picker 
+          mode="date" 
+          value="{{userProfile.birthday || userInfo.birthday}}"
+          start="1900-01-01"
+          end="{{maxDate}}"
+          disabled="{{!isProfileEditing}}"
+          bindchange="handleDateChange"
+        >
+          <view class="form-input {{isProfileEditing ? 'input-active' : ''}}">
+            {{displayBirthday || userProfile.birthday || userInfo.birthday || '请选择生日'}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- Bio Field -->
+      <view class="form-item">
+        <text class="form-label">个人简介 BIO</text>
+        <textarea 
+          class="form-textarea {{isProfileEditing ? 'input-active' : ''}}"
+          value="{{userProfile.bio || userInfo.bio}}"
+          disabled="{{!isProfileEditing}}"
+          bindinput="handleBioInput"
+          auto-height
+          maxlength="100"
+          placeholder="介绍一下自己吧..."
+          placeholder-class="placeholder-style"
+        />
+      </view>
+
+    </view>
+  </view>
+ <!-- 退出按钮 -->
+ <view class="save-section">
+    <button 
+      class="save-btn"
+      style="position: absolute; right:15px;top:20px ; width: 120px;height: 35px;"     
+      bindtap="logout"
+    >
+           <text>退出登录</text>
+    </button>
+  </view>
+  <view class="save-section" wx:if="{{userInfo.identity === 1}}"   bindtap="goToAdmin">
+    <button 
+      class="save-btn"
+      style="position: absolute; right:140px;top:20px ; width: 100px;height: 35px;"     
+    >
+           <text>管理员</text>
+    </button>
+  </view>
+  <!-- 保存按钮 -->
+  <view class="save-section" wx:if="{{isProfileEditing}}">
+    <button 
+      class="save-btn" 
+      loading="{{loading}}"
+      bindtap="saveProfile"
+    >
+      <image class="save-icon" src="{{iconCheckCircle}}" />
+      <text>保存个人信息</text>
+    </button>
+  </view>
+
+  
+
+  <!-- 生成图片对话框 -->
+  <view class="dialog-mask" wx:if="{{showPictureDialog}}" bindtap="closePictureDialog">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">生成头像</text>
+        <text class="dialog-close" bindtap="closePictureDialog">×</text>
+      </view>
+      <view class="dialog-body">
+        <view class="keyword-input-wrapper" catchtap="stopPropagation">
+          <input 
+            class="keyword-input" 
+            value="{{pictureKeyword}}"
+            bindinput="onKeywordInput"
+            placeholder="请输入关键字，如：风景、人物、动物等"
+            catchtap="stopPropagation"
+          />
+          <button 
+            class="generate-btn" 
+            type="primary" 
+            size="mini"
+            loading="{{loadingPicture}}"
+            bindtap="generatePicture"
+          >
+            生成
+          </button>
+        </view>
+        <view class="generated-picture-wrapper" wx:if="{{generatedPictureUrl}}">
+          <image 
+            class="generated-picture" 
+            src="{{generatedPictureUrl}}" 
+            mode="aspectFill"
+          />
+          <view class="picture-actions">
+            <button 
+              class="change-btn" 
+              type="default" 
+              size="mini"
+              bindtap="changePicture"
+            >
+              换一张
+            </button>
+            <button 
+              class="confirm-btn" 
+              type="primary" 
+              size="mini"
+              bindtap="confirmPicture"
+            >
+              使用
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

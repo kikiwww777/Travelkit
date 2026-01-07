@@ -1,0 +1,195 @@
+<!--pages/checklist/checklist.wxml-->
+<view class="checklist-container">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <view class="header-left">
+      <button class="back-btn" size="mini" bindtap="goBack">← 返回</button>
+      <view class="header-title">
+        <text class="page-title">{{trip.destination}} - 物品清单</text>
+        <text class="hint-text">勾选的为需要携带的物品</text>
+      </view>
+    </view>
+    <view class="header-right">
+      <button class="add-btn" size="mini" type="primary" bindtap="showAddFromOverview">+ 添加</button>
+      <button class="check-btn" type="primary" size="mini" bindtap="startCheck">开始查验</button>
+    </view>
+  </view>
+
+  <!-- 进度概览 -->
+  <view class="progress-card">
+    <view class="progress-stats">
+      <view class="stat-item">
+        <text class="stat-number">{{checkedCount}}</text>
+        <text class="stat-label">已勾选</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{totalCount - checkedCount}}</text>
+        <text class="stat-label">未勾选</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{totalCount}}</text>
+        <text class="stat-label">总物品</text>
+      </view>
+    </view>
+    <progress 
+      class="progress-bar" 
+      percent="{{progressPercentage}}" 
+      stroke-width="8"
+      activeColor="#409eff"
+    />
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <picker 
+      class="filter-picker" 
+      mode="selector" 
+      range="{{categoryOptions}}" 
+      range-key="label"
+      value="{{categoryIndex}}"
+      bindchange="onCategoryChange"
+    >
+      <view class="picker-text">
+        {{selectedCategoryLabel}}
+      </view>
+    </picker>
+    
+    <input 
+      class="filter-input" 
+      placeholder="搜索物品名称" 
+      value="{{filterForm.keyword}}"
+      bindinput="onKeywordInput"
+    />
+    
+    <button class="reset-btn" size="mini" bindtap="resetFilter">重置</button>
+  </view>
+
+  <!-- 物品列表 -->
+  <view class="item-list">
+    <view 
+      class="item-card {{item.checked ? 'checked' : ''}}" 
+      wx:for="{{filteredItems}}" 
+      wx:key="id"
+    >
+      <view class="item-header">
+        <checkbox-group bindchange="updateItemStatus">
+          <label class="checkbox-label">
+            <checkbox value="{{item.id}}" checked="{{item.checked}}" />
+            <text class="item-name">{{item.name}}</text>
+          </label>
+        </checkbox-group>
+        <text class="item-delete" bindtap="deleteItem" data-id="{{item.id}}">删除</text>
+      </view>
+      
+      <view class="item-content">
+        <text class="item-category">{{item.categoryText}}</text>
+        <text wx:if="{{item.description}}" class="item-description">{{item.description}}</text>
+        <text wx:if="{{item.note}}" class="item-note">📝 {{item.note}}</text>
+      </view>
+    </view>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{filteredItems.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-icon">📦</text>
+      <text class="empty-text">暂无物品数据</text>
+      <button class="empty-btn" type="primary" bindtap="showAddFromOverview">添加物品</button>
+    </view>
+  </view>
+
+  <!-- 添加物品对话框 -->
+  <view wx:if="{{showAddItemDialog}}" class="dialog-mask" bindtap="cancelAddItem">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">添加新物品</text>
+        <text class="dialog-close" bindtap="cancelAddItem">×</text>
+      </view>
+      
+      <view class="dialog-body">
+        <view class="form-item">
+          <text class="form-label">物品名称 *</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入物品名称"
+            value="{{addItemForm.name}}"
+            bindinput="onItemNameInput"
+          />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">分类 *</text>
+          <picker 
+            mode="selector" 
+            range="{{categoryOptionsWithoutAll}}" 
+            range-key="label"
+            value="{{addItemForm.categoryIndex}}"
+            bindchange="onItemCategoryChange"
+          >
+            <view class="picker-view">
+              {{selectedCategoryLabelForAdd}}
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">描述</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入物品描述（可选）"
+            value="{{addItemForm.description}}"
+            bindinput="onItemDescriptionInput"
+            maxlength="200"
+          />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">备注</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入备注信息（可选）"
+            value="{{addItemForm.note}}"
+            bindinput="onItemNoteInput"
+            maxlength="200"
+          />
+        </view>
+      </view>
+
+      <view class="dialog-footer">
+        <button class="dialog-btn" bindtap="cancelAddItem">取消</button>
+        <button class="dialog-btn primary" bindtap="confirmAddItem">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 从物品总览选择对话框 -->
+  <view wx:if="{{showItemOverviewDialog}}" class="dialog-mask" bindtap="closeItemOverviewDialog">
+    <view class="dialog-content large" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">从物品库选择</text>
+        <text class="dialog-close" bindtap="closeItemOverviewDialog">×</text>
+      </view>
+      
+      <view class="dialog-body">
+        <view class="overview-list">
+          <view 
+            class="overview-item" 
+            wx:for="{{itemOverviewFiltered}}" 
+            wx:key="id"
+            bindtap="selectFromOverview"
+            data-id="{{item.id}}"
+          >
+            <text class="overview-name">{{item.name}}</text>
+            <text class="overview-category">{{getCategoryText(item.category)}}</text>
+          </view>
+          <view wx:if="{{itemOverviewFiltered.length === 0}}" class="empty-overview">
+            <text>所有物品已添加</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="dialog-footer">
+        <button class="dialog-btn primary" bindtap="showAddItem">添加自定义物品</button>
+        <button class="dialog-btn" bindtap="closeItemOverviewDialog">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

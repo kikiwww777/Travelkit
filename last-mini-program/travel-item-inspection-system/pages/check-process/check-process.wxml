@@ -1,0 +1,187 @@
+<!--pages/check-process/check-process.wxml-->
+<view class="check-process-container">
+  <!-- 行程头部信息 -->
+  <view class="trip-header">
+    <view class="trip-info">
+      <text class="trip-destination">{{trip.destination}}</text>
+      <view class="trip-meta">
+        <text class="trip-dates">📅 {{trip.startDate}} - {{trip.endDate}}</text>
+        <text class="trip-duration">⏱ {{trip.duration}}天</text>
+      </view>
+    </view>
+    <view class="trip-actions">
+      <button class="action-btn" size="mini" bindtap="pauseCheckMode" wx:if="{{isCheckingMode}}">暂停查验</button>
+      <button class="action-btn primary" size="mini" bindtap="completeCheckMode" wx:if="{{isCheckingMode}}">完成查验</button>
+      <button class="action-btn" size="mini" bindtap="exitCheckMode">退出</button>
+    </view>
+  </view>
+
+  <!-- 查验进度 -->
+  <view class="progress-card">
+    <view class="progress-stats">
+      <view class="stat-item">
+        <text class="stat-number">{{checkedCount}}</text>
+        <text class="stat-label">已查验</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{skippedCount}}</text>
+        <text class="stat-label">已跳过</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{pendingCount}}</text>
+        <text class="stat-label">待查验</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{totalItemsCount}}</text>
+        <text class="stat-label">总物品</text>
+      </view>
+    </view>
+    <progress 
+      class="progress-bar" 
+      percent="{{progressPercentage}}" 
+      stroke-width="10"
+      activeColor="#409eff"
+    />
+  </view>
+
+  <!-- 查验模式选择 -->
+  <view class="check-mode-selector">
+    <view class="mode-tabs">
+      <view 
+        class="mode-tab {{currentCheckMode === 'manual' ? 'active' : ''}}"
+        bindtap="switchCheckMode"
+        data-mode="manual"
+      >
+        <text class="mode-icon">✓</text>
+        <text class="mode-text">逐项勾选</text>
+      </view>
+      <view 
+        class="mode-tab {{currentCheckMode === 'photo' ? 'active' : ''}}"
+        bindtap="switchCheckMode"
+        data-mode="photo"
+      >
+        <text class="mode-icon">📷</text>
+        <text class="mode-text">拍照验证</text>
+      </view>
+      <view 
+        class="mode-tab {{currentCheckMode === 'voice' ? 'active' : ''}}"
+        bindtap="switchCheckMode"
+        data-mode="voice"
+      >
+        <text class="mode-icon">🎤</text>
+        <text class="mode-text">语音确认</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已查验物品列表 -->
+  <view wx:if="{{checkedItemsList.length > 0 || skippedItemsList.length > 0}}" class="checked-items-box">
+    <view class="checked-items-header">
+      <text class="checked-title">已查验物品 ({{checkedItemsList.length + skippedItemsList.length}})</text>
+    </view>
+    <view class="checked-items-list">
+      <view 
+        class="checked-item-tag success"
+        wx:for="{{checkedItemsList}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="removeCheckRecord"
+      >
+        <text class="item-icon">✓</text>
+        <text class="item-name">{{item.name}}</text>
+      </view>
+      <view 
+        class="checked-item-tag danger"
+        wx:for="{{skippedItemsList}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="removeCheckRecord"
+      >
+        <text class="item-icon">✗</text>
+        <text class="item-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当前查验物品 -->
+  <view wx:if="{{currentCheckItem}}" class="current-check-item">
+    <view class="item-header">
+      <text class="item-title">{{currentCheckItem.name}}</text>
+      <text class="item-category">{{getCategoryText(currentCheckItem.category)}}</text>
+    </view>
+    
+    <view class="item-info" wx:if="{{currentCheckItem.note}}">
+      <text class="info-icon">📝</text>
+      <text class="info-text">{{currentCheckItem.note}}</text>
+    </view>
+    
+    <!-- 逐项勾选模式 -->
+    <view wx:if="{{currentCheckMode === 'manual'}}" class="manual-check">
+      <checkbox-group bindchange="handleCheckboxChange" key="{{checkboxKey}}">
+        <label class="checkbox-large">
+          <checkbox value="checked" checked="{{checkboxChecked}}" />
+          <text class="checkbox-text">我已确认携带此物品</text>
+        </label>
+      </checkbox-group>
+    </view>
+    
+    <!-- 拍照验证模式 -->
+    <view wx:if="{{currentCheckMode === 'photo'}}" class="photo-check">
+      <view wx:if="{{!uploadedPhoto}}" class="photo-upload">
+        <button class="photo-btn" type="primary" bindtap="choosePhoto">
+          <text class="btn-icon">📷</text>
+          <text class="btn-text">选择照片</text>
+        </button>
+      </view>
+      <view wx:if="{{uploadedPhoto}}" class="photo-preview">
+        <image class="preview-image" src="{{uploadedPhoto}}" mode="aspectFit" />
+        <view class="photo-actions">
+          <button class="photo-action-btn" type="primary" bindtap="confirmPhotoCheck">确认照片</button>
+          <button class="photo-action-btn" bindtap="retakePhoto">重新拍照</button>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 语音确认模式 -->
+    <view wx:if="{{currentCheckMode === 'voice'}}" class="voice-check">
+      <view wx:if="{{!voiceResult}}" class="voice-recorder">
+        <button 
+          class="voice-btn {{isRecording ? 'recording' : ''}}" 
+          type="primary"
+          bindtap="toggleRecording"
+        >
+          <text class="btn-icon">{{isRecording ? '⏸' : '🎤'}}</text>
+          <text class="btn-text">{{isRecording ? '停止录音' : '开始录音'}}</text>
+        </button>
+        <text class="voice-tip">请说出："我已携带{{currentCheckItem.name}}"</text>
+      </view>
+      <view wx:if="{{voiceResult}}" class="voice-result">
+        <text class="result-text">{{voiceResult}}</text>
+        <view class="voice-actions">
+          <button class="voice-action-btn" type="primary" bindtap="confirmVoiceCheck">确认语音</button>
+          <button class="voice-action-btn" bindtap="retryVoice">重新录音</button>
+        </view>
+      </view>
+    </view>
+    
+    <view class="item-actions">
+      <button class="skip-btn" bindtap="skipCurrentItem">跳过此项</button>
+    </view>
+  </view>
+  
+  <!-- 查验完成 -->
+  <view wx:if="{{!currentCheckItem && totalItemsCount > 0}}" class="check-complete">
+    <text class="complete-icon">✓</text>
+    <text class="complete-title">所有物品已查验完成！</text>
+    <text class="complete-progress">查验进度：{{checkedCount}}/{{totalItemsCount}}</text>
+    <button class="complete-btn" type="primary" bindtap="completeCheckMode">完成查验</button>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{totalItemsCount === 0}}" class="empty-state">
+    <text class="empty-icon">📦</text>
+    <text class="empty-text">暂无物品需要查验</text>
+    <button class="empty-btn" bindtap="exitCheckMode">返回</button>
+  </view>
+</view>
+

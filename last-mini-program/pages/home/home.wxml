@@ -1,0 +1,365 @@
+<!--pages/home/home.wxml-->
+<view class="home-container layout-wanderlust">
+  <!-- 探索 / Wanderlust 主题：唯一首页布局 -->
+  <!-- 游客模式标识 -->
+  <view wx:if="{{isGuestMode}}" class="guest-mode-badge">
+    <text class="guest-mode-text">游客模式</text>
+  </view>
+  <!-- 1. 当没有行程时，显示空状态页 -->
+  <view wx:if="{{recentTrips.length === 0 && !loading && recentCooperativeTrips.length === 0 && !cooperativeLoading}}" class="empty-page-container">
+    <!-- 顶部欢迎语 + 头像 -->
+    <view class="wanderlust-header">
+      <view class="wanderlust-header-left">
+        <text class="wanderlust-hello">HELLO, TRAVELER</text>
+        <view class="wanderlust-title">
+          <text class="wanderlust-title-line">探索你的</text>
+          <text class="wanderlust-title-line wanderlust-title-highlight">下一站旅程</text>
+        </view>
+      </view>
+      <view class="wanderlust-avatar"></view>
+    </view>
+
+    <!-- 灵感推荐 Hero 大图 -->
+    <view class="wanderlust-hero-inspiration" bindtap="createTrip">
+        <image 
+        class="wanderlust-hero-inspiration-bg-img"
+        src="{{homeDefaultImage}}"
+        mode="aspectFill"
+      />
+      <view class="wanderlust-hero-inspiration-bg"></view>
+      <view class="wanderlust-hero-inspiration-mask"></view>
+      <view class="wanderlust-hero-inspiration-badge">
+        <view class="wanderlust-hero-inspiration-badge-icon"></view>
+        <text class="wanderlust-hero-inspiration-badge-text">灵感推荐</text>
+      </view>
+      <view class="wanderlust-hero-inspiration-content">
+        <text class="wanderlust-hero-inspiration-title">世界那么大</text>
+        <text class="wanderlust-hero-inspiration-subtitle">不妨去看看，行李安排交给我们</text>
+      </view>
+      <view class="wanderlust-hero-inspiration-btn">
+        <text class="wanderlust-hero-inspiration-btn-arrow">→</text>
+      </view>
+    </view>
+
+    <!-- 旅行工具箱：新建 / 协作 / 模板 -->
+    <view class="wanderlust-toolbox">
+      <text class="wanderlust-toolbox-title">旅行工具箱</text>
+      <view class="wanderlust-toolbox-grid">
+        <view class="wanderlust-tool-card" bindtap="createTrip">
+          <view class="tool-icon tool-icon-blue tool-icon-plus"></view>
+          <view class="tool-text-main">新建行程</view>
+          <view class="tool-text-sub">开始规划</view>
+        </view>
+        <view class="wanderlust-tool-card" bindtap="joinCooperativeTrip">
+          <view class="tool-icon tool-icon-green tool-icon-ticket"></view>
+          <view class="tool-text-main">加入行程</view>
+          <view class="tool-text-sub">扫码口令</view>
+        </view>
+        <view class="wanderlust-tool-card" bindtap="createCooperativeTrip">
+          <view class="tool-icon tool-icon-purple tool-icon-handshake"></view>
+          <view class="tool-text-main">好友协作</view>
+          <view class="tool-text-sub">邀请好友</view>
+        </view>
+        <view class="wanderlust-tool-card" bindtap="viewTemplates">
+          <view class="tool-icon tool-icon-orange tool-icon-compass"></view>
+          <view class="tool-text-main">灵感探索</view>
+          <view class="tool-text-sub">热门模板</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 最近行程标题 -->
+    <view class="wanderlust-section-header">
+      <text class="wanderlust-section-title">最近行程</text>
+      <text class="wanderlust-section-more" bindtap="viewAllTrips">查看全部 ></text>
+    </view>
+
+    <!-- 空状态内容 -->
+    <view class="empty-state-container">
+      <view class="empty-state-icon-wrapper">
+        <view class="empty-state-icon-circle">
+          <!-- MapPinned 图标（使用CSS绘制） -->
+          <view class="empty-state-location-icon">
+            <view class="map-pin-outer"></view>
+            <view class="map-pin-inner"></view>
+          </view>
+        </view>
+      </view>
+      <text class="empty-state-main-text">暂无近期行程</text>
+      <text class="empty-state-sub-text">还没有出行计划？一键生成你的专属清单吧</text>
+      <button class="empty-state-primary-btn" bindtap="createTrip">
+        <view class="empty-state-btn-icon empty-state-btn-icon-sparkles"></view>
+        <text class="empty-state-btn-text">创建新行程</text>
+      </button>
+      <button class="empty-state-secondary-btn" bindtap="viewTemplates">
+        <view class="empty-state-btn-icon empty-state-btn-icon-compass"></view>
+        <text class="empty-state-btn-text">浏览热门模板</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 2. 当有行程时，显示正常内容 -->
+  <view wx:else>
+    <!-- 顶部欢迎语 + 头像 -->
+    <view class="wanderlust-header">
+      <view class="wanderlust-header-left">
+        <text class="wanderlust-hello">HELLO, TRAVELER</text>
+        <view class="wanderlust-title">
+          <text class="wanderlust-title-line">探索你的</text>
+          <text class="wanderlust-title-line wanderlust-title-highlight">下一站旅程</text>
+        </view>
+      </view>
+      <view class="wanderlust-avatar"></view>
+    </view>
+
+    <!-- 大图横幅：最近一次出发行程 -->
+    <view wx:if="{{heroTrip}}" class="wanderlust-hero" bindtap="viewTrip" data-id="{{heroTrip.id}}">
+      <image
+        class="wanderlust-hero-img"
+        src="{{heroImage}}"
+        mode="aspectFill"
+      />
+      <view class="wanderlust-hero-mask"></view>
+      <view class="wanderlust-hero-content">
+        <view class="wanderlust-hero-chip">
+          <text wx:if="{{heroDaysText}}">{{heroDaysText}}</text>
+          <text wx:else>近期出行</text>
+        </view>
+        <text class="wanderlust-hero-title">
+          {{heroShortLine}}
+        </text>
+        <view class="wanderlust-hero-sub">
+          <text class="wanderlust-hero-text">
+            {{heroBottomLine}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 如果没有个人行程，显示灵感推荐 Hero -->
+    <view wx:else class="wanderlust-hero-inspiration" bindtap="createTrip">
+      <view class="wanderlust-hero-inspiration-bg">
+      </view>
+      <view class="wanderlust-hero-inspiration-mask"></view>
+      <view class="wanderlust-hero-inspiration-badge">
+        <view class="wanderlust-hero-inspiration-badge-icon"></view>
+        <text class="wanderlust-hero-inspiration-badge-text">灵感推荐</text>
+      </view>
+      <view class="wanderlust-hero-inspiration-content">
+        <text class="wanderlust-hero-inspiration-title">世界那么大</text>
+        <text class="wanderlust-hero-inspiration-subtitle">不妨去看看，行李安排交给我们</text>
+      </view>
+      <view class="wanderlust-hero-inspiration-btn">
+        <text class="wanderlust-hero-inspiration-btn-arrow">→</text>
+      </view>
+    </view>
+
+    <!-- 旅行工具箱：新建 / 协作 / 模板 -->
+    <!-- 修复：统一使用CSS类名图标，替代乱码字符 -->
+    <view class="wanderlust-toolbox">
+      <text class="wanderlust-toolbox-title">旅行工具箱</text>
+      <view class="wanderlust-toolbox-grid">
+        <view class="wanderlust-tool-card" bindtap="createTrip">
+          <view class="tool-icon tool-icon-blue tool-icon-plus"></view>
+          <view class="tool-text-main">新建行程</view>
+          <view class="tool-text-sub">开始规划</view>
+        </view>
+        <view class="wanderlust-tool-card" bindtap="joinCooperativeTrip">
+          <view class="tool-icon tool-icon-green tool-icon-ticket"></view>
+          <view class="tool-text-main">加入行程</view>
+          <view class="tool-text-sub">扫码口令</view>
+        </view>
+        <view class="wanderlust-tool-card" bindtap="createCooperativeTrip">
+          <view class="tool-icon tool-icon-purple tool-icon-handshake"></view>
+          <view class="tool-text-main">好友协作</view>
+          <view class="tool-text-sub">邀请好友</view>
+        </view>
+        <view class="wanderlust-tool-card" bindtap="viewTemplates">
+          <view class="tool-icon tool-icon-orange tool-icon-compass"></view>
+          <view class="tool-text-main">灵感探索</view>
+          <view class="tool-text-sub">热门模板</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 最近行程列表 -->
+    <view class="wanderlust-section">
+      <view class="wanderlust-section-header">
+        <text class="wanderlust-section-title">最近行程</text>
+        <text class="wanderlust-section-more" bindtap="viewAllTrips">查看全部 ></text>
+      </view>
+
+      <!-- 如果有个人行程，显示列表 -->
+      <block wx:if="{{recentTrips.length > 0}}">
+        <view 
+          wx:for="{{recentTrips}}" 
+          wx:key="id"
+          class="wanderlust-trip-card"
+          bindtap="viewTrip"
+          data-id="{{item.id}}"
+        >
+          <image
+            class="wanderlust-trip-bg"
+            src="{{item.coverImage || item.imageUrl}}"
+            mode="aspectFill"
+          />
+          <view class="wanderlust-trip-mask"></view>
+          <view class="wanderlust-trip-glass"></view>
+
+          <!-- 右上角状态徽章 -->
+          <view class="wanderlust-trip-status-chip {{item.status === 'preparing' ? 'status-preparing' : 'status-other'}}">
+            <text>{{item.statusText}}</text>
+          </view>
+
+          <!-- 底部内容区域 -->
+          <view class="wanderlust-trip-content">
+            <!-- 左上角类型标签 -->
+            <view class="wanderlust-trip-type-pill">
+              <view class="wanderlust-trip-type-icon wanderlust-trip-type-icon-{{item.type || 'other'}}"></view>
+              <text class="wanderlust-trip-type-text">
+                {{item.typeEnglish || item.typeText || 'TRIP'}}
+              </text>
+            </view>
+
+            <!-- 主标题 -->
+            <text class="wanderlust-trip-title">
+              {{item.name || item.destination || '未命名行程'}}
+            </text>
+
+            <!-- 位置和日期 -->
+            <view class="wanderlust-trip-meta-row">
+              <view class="wanderlust-trip-location-icon">
+                <view class="trip-map-pin-outer"></view>
+                <view class="trip-map-pin-inner"></view>
+              </view>
+              <text class="wanderlust-trip-meta">
+                {{item.destination || '未填写目的地'}}
+              </text>
+              <view class="wanderlust-trip-meta-dot"></view>
+              <text class="wanderlust-trip-meta">
+                {{item.startDate}} - {{item.endDate}}
+              </text>
+            </view>
+          </view>
+
+          <!-- 右下角操作按钮 -->
+          <view class="wanderlust-trip-arrow">
+            <text class="wanderlust-trip-arrow-icon">→</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 如果没有个人行程，显示空状态 -->
+      <view wx:else class="empty-state-container">
+        <view class="empty-state-icon-wrapper">
+          <view class="empty-state-icon-circle">
+            <!-- MapPinned 图标（使用CSS绘制） -->
+            <view class="empty-state-location-icon"></view>
+          </view>
+        </view>
+        <text class="empty-state-main-text">暂无近期行程</text>
+        <text class="empty-state-sub-text">还没有出行计划？一键生成你的专属清单吧</text>
+        <button class="empty-state-primary-btn" bindtap="createTrip">
+          <view class="empty-state-btn-icon empty-state-btn-icon-sparkles"></view>
+          <text class="empty-state-btn-text">创建新行程</text>
+        </button>
+        <button class="empty-state-secondary-btn" bindtap="viewTemplates">
+          <view class="empty-state-btn-icon empty-state-btn-icon-compass"></view>
+          <text class="empty-state-btn-text">浏览热门模板</text>
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近合作行程列表 -->
+  <view class="wanderlust-section">
+    <view class="wanderlust-section-header">
+      <text class="wanderlust-section-title">最近合作行程</text>
+      <text class="wanderlust-section-more" bindtap="viewAllCooperativeTrips">查看全部 ></text>
+    </view>
+
+    <view
+      wx:for="{{recentCooperativeTrips}}"
+      wx:key="id"
+      class="wanderlust-trip-card"
+      bindtap="viewCooperativeTrip"
+      data-id="{{item.id}}"
+    >
+      <image
+        class="wanderlust-trip-bg"
+        src="{{item.coverImage || item.imageUrl}}"
+        mode="aspectFill"
+      />
+      <view class="wanderlust-trip-mask"></view>
+      <view class="wanderlust-trip-glass"></view>
+
+      <!-- 左上角协作标签 -->
+      <view class="wanderlust-trip-coop-chip">
+        <view class="wanderlust-trip-coop-icon"></view>
+        <text>伙伴同行</text>
+      </view>
+
+      <!-- 右上角状态徽章 -->
+      <view class="wanderlust-trip-status-chip {{item.status === 'preparing' ? 'status-preparing' : 'status-other'}}">
+        <text>{{item.statusText || '进行中'}}</text>
+      </view>
+
+      <!-- 底部内容区域 -->
+      <view class="wanderlust-trip-content">
+        <!-- 左上角类型标签 -->
+        <view class="wanderlust-trip-type-pill">
+          <view class="wanderlust-trip-type-icon-team"></view>
+          <text class="wanderlust-trip-type-text">COOP TRIP</text>
+        </view>
+
+        <!-- 主标题 -->
+        <text class="wanderlust-trip-title">
+          {{item.name || item.destination || '未命名行程'}}
+        </text>
+
+        <!-- 位置和日期 -->
+        <view class="wanderlust-trip-meta-row">
+          <view class="wanderlust-trip-location-icon"></view>
+          <text class="wanderlust-trip-meta wanderlust-trip-meta-destination">
+            {{item.destination || '未填写目的地'}}
+          </text>
+          <text class="wanderlust-trip-meta-dot">·</text>
+          <text class="wanderlust-trip-meta wanderlust-trip-meta-date">
+            {{item.startDate}} - {{item.endDate}}
+          </text>
+        </view>
+      </view>
+
+      <!-- 右下角操作按钮 -->
+      <view class="wanderlust-trip-arrow">
+        <text class="wanderlust-trip-arrow-icon">→</text>
+      </view>
+    </view>
+
+    <!-- 空状态内容 -->
+    <view
+      wx:if="{{recentCooperativeTrips.length === 0 && !cooperativeLoading}}"
+      class="empty-state-container"
+    >
+      <view class="empty-state-icon-wrapper">
+        <view class="empty-state-icon-circle">
+          <!-- MapPinned 图标（使用CSS绘制） -->
+          <view class="empty-state-location-icon">
+            <view class="map-pin-outer"></view>
+            <view class="map-pin-inner"></view>
+          </view>
+        </view>
+      </view>
+      <text class="empty-state-main-text">暂无合作行程</text>
+      <text class="empty-state-sub-text">还没有协作计划？邀请好友一起规划出行清单吧</text>
+      <button class="empty-state-primary-btn" bindtap="createCooperativeTrip">
+        <view class="empty-state-btn-icon empty-state-btn-icon-sparkles"></view>
+        <text class="empty-state-btn-text">创建合作行程</text>
+      </button>
+      <button class="empty-state-secondary-btn" bindtap="joinCooperativeTrip">
+        <view class="empty-state-btn-icon empty-state-btn-icon-ticket"></view>
+        <text class="empty-state-btn-text">加入行程</text>
+      </button>
+    </view>
+  </view>
+</view>

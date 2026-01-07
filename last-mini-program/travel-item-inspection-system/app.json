@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/register/register",
+    "pages/home/home",
+    "pages/trip-list/trip-list",
+    "pages/trip-create/trip-create",
+    "pages/trip-detail/trip-detail",
+    "pages/checklist/checklist",
+    "pages/check-process/check-process",
+    "pages/profile/profile",
+    "pages/statistics/statistics"
+  ],
+  "window": {
+    "navigationBarTitleText": "出行必带",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#667eea",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/trip-list/trip-list",
+        "text": "行程"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.mapper.TripTemplateMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.check.pojo.TripTemplate">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="destination" property="destination" jdbcType="VARCHAR"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="tags" property="tags" jdbcType="VARCHAR"/>
+        <result column="is_public" property="isPublic" jdbcType="BOOLEAN"/>
+        <result column="is_status" property="isStatus" jdbcType="INTEGER"/>
+        <result column="result" property="result" jdbcType="VARCHAR"/>
+        <result column="created_by" property="createdBy" jdbcType="INTEGER"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, description, destination, duration, type, tags, is_public, is_status, result, created_by, created_at, updated_at
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trip_templates
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectPublicTemplates" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trip_templates
+        WHERE is_public = 1 AND is_status = 1
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectByCreatedBy" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trip_templates
+        WHERE created_by = #{createdBy}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trip_templates
+        WHERE type = #{type}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectByDestination" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trip_templates
+        WHERE destination LIKE CONCAT('%', #{destination}, '%')
+        ORDER BY created_at DESC
+    </select>
+
+    <insert id="insert" parameterType="com.example.check.pojo.TripTemplate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO trip_templates (name, description, destination, duration, type, tags, is_public, is_status, result, created_by, created_at, updated_at)
+        VALUES (#{name}, #{description}, #{destination}, #{duration}, #{type}, #{tags}, #{isPublic}, #{isStatus}, #{result}, #{createdBy}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.check.pojo.TripTemplate">
+        UPDATE trip_templates
+        SET name = #{name},
+            description = #{description},
+            destination = #{destination},
+            duration = #{duration},
+            type = #{type},
+            tags = #{tags},
+            is_public = #{isPublic},
+            is_status = #{isStatus},
+            result = #{result},
+            updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM trip_templates WHERE id = #{id}
+    </delete>
+
+    <select id="selectByPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trip_templates
+        <where>
+            <if test="isPublic != null">
+                AND is_public = #{isPublic}
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="destination != null and destination != ''">
+                AND destination LIKE CONCAT('%', #{destination}, '%')
+            </if>
+        </where>
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM trip_templates
+        <where>
+            <if test="isPublic != null">
+                AND is_public = #{isPublic}
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="destination != null and destination != ''">
+                AND destination LIKE CONCAT('%', #{destination}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM trip_templates
+        ORDER BY created_at DESC
+    </select>
+
+</mapper>

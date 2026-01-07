@@ -1,0 +1,213 @@
+<!--pages/cooperative-checklist/cooperative-checklist.wxml-->
+<view class="supply-depot-container">
+  
+  <!-- 1. 顶部导航栏 (透明模糊) -->
+  <view class="nav-bar-glass">
+    <!-- <view class="nav-status-bar" style="height: {{statusBarHeight}}px;"></view> -->
+    <view class="nav-content">
+      <view class="nav-left" bindtap="goBack">
+        <view class="icon-chevron-left"></view>
+        <text class="nav-back-text">返回</text>
+      </view>
+      <view class="nav-center">
+        <text class="nav-title">{{trip.name || trip.destination || '合作行程清单'}}</text>
+        <text class="nav-subtitle">COOPERATIVE DEPOT</text>
+      </view>
+      <view class="nav-right"></view> <!-- 占位 -->
+    </view>
+  </view>
+
+  <!-- 锁定提示 -->
+  <view wx:if="{{!canModifyItems}}" class="locked-tip">
+    行程已完成，无法继续添加或修改物品
+  </view>
+
+  <!-- 2. 内容滚动区 -->
+  <scroll-view scroll-y class="main-scroll" enable-flex>
+    <view class="scroll-inner">
+      
+      <!-- A. 统计卡片 (Boarding Pass Style) -->
+      <view class="stats-card">
+        <view class="stats-bg-blur"></view>
+        <view class="stats-content">
+          <view class="stats-left">
+            <view class="stat-group">
+              <text class="stat-num text-dark">{{checkedCount}}</text>
+              <text class="stat-label">READY</text>
+            </view>
+            <view class="stat-group">
+              <text class="stat-num text-gray">{{totalCount - checkedCount}}</text>
+              <text class="stat-label">PENDING</text>
+            </view>
+          </view>
+          <view class="stats-right">
+            <text class="progress-text">{{progressPercentage}}%</text>
+            <view class="progress-track">
+              <view class="progress-fill" style="width: {{progressPercentage}}%;"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- B. 搜索 & 分类筛选 (Sticky Header) -->
+      <view class="filter-section">
+        <view class="search-box">
+          <image class="search-icon" src="{{iconSearch}}" />
+          <input 
+            class="search-input" 
+            placeholder="搜索物品名称 / 关键词" 
+            placeholder-class="placeholder-style"
+            value="{{filterForm.keyword}}"
+            bindinput="onKeywordInput"
+          />
+          <view wx:if="{{filterForm.keyword}}" class="clear-icon" bindtap="clearSearch">
+            <image class="clear-icon-img" src="{{iconClear}}" mode="aspectFit" />
+          </view>
+        </view>
+
+        <scroll-view scroll-x class="category-scroll" enable-flex>
+          <view class="category-list">
+            <block wx:for="{{categoryOptions}}" wx:key="label">
+              <view 
+                class="cat-pill {{selectedCategoryLabel === item.label ? 'pill-active' : 'pill-normal'}}"
+                bindtap="onCategorySelect"
+                data-label="{{item.label}}"
+              >
+                {{item.label}}
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+
+        <view class="filter-actions">
+          <text class="filter-info">显示 {{filteredItems.length}} 个物品</text>
+          <view class="action-btns">
+            <view class="action-btn" bindtap="resetFilter">重置筛选</view>
+            <view class="action-btn btn-danger" bindtap="resetAllCheckedItems" wx:if="{{canModifyItems}}">清空勾选</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- C. 物品列表 (Masonry Grid - 双列) -->
+      <view class="items-grid">
+        <block wx:for="{{filteredItems}}" wx:key="id">
+          <view 
+            class="item-card {{item.checked ? 'card-checked' : ''}}"
+            bindtap="toggleItemCheck"
+            data-id="{{item.id || item.itemOverviewId}}"
+          >
+            <!-- 选中指示器 -->
+            <view class="check-indicator {{item.checked ? 'checked-bg' : ''}}">
+              <image wx:if="{{item.checked}}" class="icon-check-mini" src="{{iconCheckMini}}" />
+            </view>
+
+            <!-- 删除按钮 (仅自定义物品) -->
+            <view wx:if="{{!item.isFromOverview && canModifyItems}}" class="item-delete-btn" catchtap="deleteItem" data-id="{{item.id}}">
+              <image class="icon-delete" src="{{iconDelete}}" />
+            </view>
+
+            <!-- 图标占位 -->
+            <view class="item-icon-box" style="background: {{item.checked ? '#ecfdf5' : item.config.bg}}; color: {{item.checked ? '#10b981' : item.config.color}};">
+              <image class="item-category-icon" src="{{item.config.icon}}" mode="aspectFit" />
+            </view>
+
+            <view class="item-info">
+              <text class="item-name {{item.checked ? 'text-green' : ''}}">{{item.name}}</text>
+              <text class="item-category-text">{{item.categoryText || item.category}}</text>
+            </view>
+
+            <!-- 备注标签 -->
+            <view wx:if="{{item.description || item.addedByName}}" class="item-note-badge">
+              <image class="icon-note-mini" src="{{iconNoteMini}}" />
+              <view class="note-content">
+                <text wx:if="{{item.addedByName}}" class="note-added-by">由 {{item.addedByName}} 添加</text>
+                <text wx:if="{{item.description}}" class="note-text">{{item.description}}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:if="{{filteredItems.length === 0 && !loading}}" class="empty-state">
+        <image class="empty-icon" src="{{iconPackage}}" />
+        <text class="empty-text">没有找到相关物品</text>
+      </view>
+
+      <!-- 底部垫高 -->
+      <view style="height: 200rpx;"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 4. 装备录入弹窗 (Supply Depot) -->
+  <view class="modal-mask" wx:if="{{showAddItemDialog}}" bindtap="cancelAddItem"></view>
+  <view class="modal-panel {{showAddItemDialog ? 'slide-up' : ''}}" wx:if="{{showAddItemDialog}}">
+    
+    <view class="drag-handle-bar" bindtap="cancelAddItem"><view class="drag-handle"></view></view>
+
+    <view class="modal-content">
+      <view class="modal-header">
+        <view class="title-row">
+          <image class="icon-sparkles" src="{{iconSparkles}}" />
+          <text class="modal-title">装备录入</text>
+        </view>
+        <view class="close-btn" bindtap="cancelAddItem"><image class="icon-x" src="{{iconX}}" /></view>
+      </view>
+
+      <scroll-view scroll-y class="form-scroll">
+        <view class="form-body">
+          <!-- 1. 名称 -->
+          <view class="form-group">
+            <view class="label-row"><text class="label-text">物品名称</text><text class="label-star">*</text></view>
+            <view class="input-box">
+              <view class="input-icon-wrap"><image class="input-icon" src="{{iconBasket}}" /></view>
+              <input class="main-input" placeholder="例如：专业登山杖" placeholder-class="placeholder-gray" value="{{addItemForm.name}}" bindinput="onItemNameInput" />
+            </view>
+          </view>
+
+          <!-- 2. 分类 -->
+          <view class="form-group">
+            <view class="label-row"><text class="label-text">所属分类</text><text class="label-star">*</text></view>
+            <scroll-view scroll-x class="category-scroll" enable-flex>
+              <view class="category-list">
+                <block wx:for="{{categoryList}}" wx:key="name">
+                  <view class="category-item {{addItemForm.category === item.name ? 'cat-active' : 'cat-normal'}}" bindtap="selectCategory" data-name="{{item.name}}">
+                    <view wx:if="{{addItemForm.category === item.name}}" class="active-dot"></view>
+                    <image class="cat-icon" src="{{item.icon}}" mode="aspectFit" style="{{addItemForm.category === item.name ? 'filter: brightness(100) contrast(100%);' : ''}}" />
+                    <text class="cat-text">{{item.name}}</text>
+                  </view>
+                </block>
+              </view>
+            </scroll-view>
+          </view>
+
+          <!-- 3. 详情 -->
+          <view class="form-group-stack">
+            <view class="text-group">
+              <text class="label-text-sm">详细描述</text>
+              <view class="textarea-box">
+                <image class="textarea-icon" src="{{iconAlignLeft}}" />
+                <textarea class="main-textarea" placeholder="规格、型号或数量..." auto-height value="{{addItemForm.description}}" bindinput="onItemDescriptionInput" />
+              </view>
+            </view>
+          </view>
+          <view style="height: 40rpx;"></view>
+        </view>
+      </scroll-view>
+
+      <!-- 底部操作 -->
+      <view class="modal-footer">
+        <view class="btn-reset" bindtap="resetAddItemForm"><image class="icon-eraser" src="{{iconEraser}}" /></view>
+        <view class="btn-cancel" bindtap="cancelAddItem">取消</view>
+        <button class="btn-confirm {{addItemForm.name ? 'btn-black' : 'btn-disabled'}}" bindtap="submitAddItem" disabled="{{!addItemForm.name}}">
+          <image class="icon-check" src="{{iconCheck}}" /> 确认入库
+        </button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 3. 悬浮添加按钮 (FAB) -->
+  <!-- <view class="fab-btn" bindtap="showAddItem" wx:if="{{canModifyItems}}">
+    <image class="fab-icon" src="{{iconPlus}}" />
+  </view> -->
+</view>

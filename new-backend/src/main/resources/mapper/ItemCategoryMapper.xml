@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.check.mapper.ItemCategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.check.pojo.ItemCategory">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, code, description, created_at
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM item_categories
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM item_categories
+        WHERE code = #{code}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM item_categories
+        ORDER BY created_at ASC
+    </select>
+
+    <insert id="insert" parameterType="com.example.check.pojo.ItemCategory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO item_categories (name, code, description, created_at)
+        VALUES (#{name}, #{code}, #{description}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.check.pojo.ItemCategory">
+        UPDATE item_categories
+        SET name = #{name},
+            code = #{code},
+            description = #{description}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM item_categories WHERE id = #{id}
+    </delete>
+
+</mapper>

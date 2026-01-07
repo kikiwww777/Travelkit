@@ -1,0 +1,123 @@
+<!--pages/trip-detail/trip-detail.wxml-->
+<view class="trip-detail-container">
+  <view wx:if="{{loading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+  
+  <view wx:else class="trip-detail">
+    <!-- 行程头部信息 -->
+    <view class="trip-header">
+      <view class="trip-info">
+        <text class="trip-destination">{{trip.destination}}</text>
+        <view class="trip-meta">
+          <text class="trip-status status-{{trip.status}}">{{getStatusText(trip.status)}}</text>
+          <text class="trip-dates">📅 {{trip.startDate}} - {{trip.endDate}}</text>
+          <text class="trip-duration">⏱ {{trip.duration}}天</text>
+          <text class="trip-travelers">👥 {{trip.travelers}}人</text>
+          <text class="trip-type">📍 {{getTypeText(trip.type)}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 查验进度 -->
+    <view wx:if="{{totalItemsCount > 0}}" class="progress-card">
+      <view class="progress-header">
+        <text class="progress-title">查验进度</text>
+        <text class="progress-text">{{checkedCount}}/{{totalItemsCount}}</text>
+      </view>
+      <progress 
+        class="progress-bar" 
+        percent="{{progressPercentage}}" 
+        stroke-width="8"
+        activeColor="#409eff"
+      />
+    </view>
+
+    <!-- 行程信息卡片 -->
+    <view class="trip-info-card">
+      <view class="card-header">
+        <text class="card-title">行程信息</text>
+      </view>
+      <view class="card-body">
+        <view wx:if="{{trip.description}}" class="info-row">
+          <text class="info-label">📝 行程描述</text>
+          <text class="info-value">{{trip.description}}</text>
+        </view>
+        <view wx:if="{{trip.specialNeeds}}" class="info-row">
+          <text class="info-label">⚠️ 特殊需求</text>
+          <text class="info-value">{{trip.specialNeeds}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 天气预报卡片 -->
+    <view wx:if="{{weatherForecast30d || loadingWeather}}" class="weather-card">
+      <view class="card-header">
+        <text class="card-title">☁️ 目的地天气</text>
+        <text class="weather-hint">(仅能展示30天内天气)</text>
+      </view>
+      <view class="card-body">
+        <!-- 加载状态 -->
+        <view wx:if="{{loadingWeather}}" class="weather-loading">
+          <text>加载天气信息中...</text>
+        </view>
+
+        <!-- 天气信息 -->
+        <view wx:elif="{{weatherForecast30d && weatherForecast30d.forecast && weatherForecast30d.forecast.length > 0}}" class="weather-content">
+          <view class="weather-city">{{weatherForecast30d.city}}</view>
+          <view wx:if="{{weatherForecast30d.hasError}}" class="weather-error-tip">
+            <text>⚠️ {{weatherForecast30d.errorMessage}}</text>
+          </view>
+          <scroll-view class="weather-forecast" scroll-x="true">
+            <view class="forecast-list">
+              <view 
+                class="forecast-item {{item.isInTripRange ? 'is-trip-date' : ''}}"
+                wx:for="{{weatherForecast30d.forecast}}" 
+                wx:key="date"
+              >
+                <text class="forecast-date">{{item.formattedDate}}</text>
+                <view class="forecast-info">
+                  <view class="forecast-icons">
+                    <image wx:if="{{item.iconDay}}" class="forecast-icon" src="{{item.iconDay}}" mode="aspectFit" />
+                    <image wx:if="{{item.iconNight}}" class="forecast-icon forecast-icon-night" src="{{item.iconNight}}" mode="aspectFit" />
+                  </view>
+                  <view class="forecast-temp">
+                    <text class="temp-max">{{item.tempMax}}°</text>
+                    <text class="temp-min">/ {{item.tempMin}}°</text>
+                  </view>
+                  <view class="forecast-text">
+                    <text class="forecast-text-day">{{item.textDay}}</text>
+                    <text wx:if="{{item.textNight && item.textNight !== item.textDay}}" class="forecast-text-night">{{item.textNight}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <!-- 错误状态 -->
+        <view wx:elif="{{weatherError}}" class="weather-error">
+          <text>⚠️ {{weatherError}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button 
+        class="action-btn primary" 
+        type="primary" 
+        bindtap="viewChecklist"
+      >
+        📋 查看物品清单
+      </button>
+      <button 
+        class="action-btn" 
+        bindtap="startCheck"
+        disabled="{{trip.status === 'completed' || trip.status === 'cancelled'}}"
+      >
+        ✓ 开始查验
+      </button>
+    </view>
+  </view>
+</view>

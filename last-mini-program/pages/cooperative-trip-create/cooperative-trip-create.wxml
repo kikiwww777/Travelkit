@@ -1,0 +1,323 @@
+<!--pages/cooperative-trip-create/cooperative-trip-create.wxml-->
+<view class="trip-create-page">
+  <!-- 1. 极光背景层 (Dynamic Background) -->
+  <view class="aurora-bg">
+    <view class="blob blob-1"></view>
+    <view class="blob blob-2"></view>
+    <view class="blob blob-3"></view>
+  </view>
+
+  <view class="content-container">
+    <!-- 1.5. 行程名称输入 -->
+    <view class="section mb-60">
+      <view class="section-label">
+        <view class="icon-tag"></view> 行程名称 <text class="label-en">TRIP NAME</text>
+        <button bindtap="reflash" style="width: 100px; color: green; background-color: azure;">刷新</button>
+      </view>
+      <view class="trip-name-wrapper">
+        <input 
+          class="trip-name-input" 
+          placeholder="给行程起个好听的名字..." 
+          placeholder-class="trip-name-placeholder"
+          value="{{tripForm.name}}"
+          bindinput="onTripNameInput"
+        />
+      </view>
+    </view>
+
+    <!-- 2. 目的地输入 (Hero Input) -->
+    <view class="section mb-60">
+      <view class="section-label">
+        <view class="icon-pin"></view> 目的地 <text class="label-en">DESTINATION</text>
+        <view wx:if="{{tripForm.destination}}" class="input-badge">已选择：{{tripForm.destination}}</view>
+        <view wx:else class="destination-confirm {{destinationFocused ? 'show' : ''}}" catchtap="queryCityList">
+          确认
+        </view>
+      </view>
+      <view class="hero-input-wrapper">
+        <input 
+          class="hero-input" 
+          placeholder="一起去哪儿？" 
+          placeholder-class="hero-placeholder"
+          value="{{cityQuery}}"
+          bindinput="onDestinationInput"
+          bindfocus="onDestinationFocus"
+          bindblur="onDestinationBlur"
+          bindconfirm="queryCityList"
+          confirm-type="search"
+        />
+      </view>
+    </view>
+
+    <!-- 3. 控制台卡片 (Control Deck: Dates & Travelers) -->
+    <view class="control-deck mb-60">
+      <!-- 上半部分：日期 -->
+      <view class="deck-row date-row">
+        <!-- 出发 -->
+        <view class="date-item border-right">
+          <view class="sub-label">出发 <text class="sub-en">START</text></view>
+          <picker mode="date" value="{{tripForm.startDate}}" bindchange="onStartDateChange" class="picker-box">
+            <view class="picker-value">
+              {{formattedStartDate || '选择日期'}} <view class="icon-chevron-down"></view>
+            </view>
+          </picker>
+        </view>
+        <!-- 返程 -->
+        <view class="date-item">
+          <view class="sub-label">返程 <text class="sub-en">END</text></view>
+          <picker mode="date" value="{{tripForm.endDate}}" bindchange="onEndDateChange" disabled="{{!tripForm.startDate}}" class="picker-box">
+            <view class="picker-value">
+              {{formattedEndDate || '选择日期'}} <view class="icon-chevron-down"></view>
+            </view>
+          </picker>
+        </view>
+      </view>
+      
+      <!-- 分割线 -->
+      <view class="deck-divider"></view>
+      <!-- 下半部分：人数 -->
+      <view class="deck-row traveler-row">
+        <view class="traveler-info">
+          <view class="sub-label">同行伙伴 <text class="sub-en">TRAVELERS</text></view>
+          <view class="traveler-desc">与谁同行</view>
+        </view>
+        
+        <!-- 计数器胶囊 -->
+        <view class="counter-capsule">
+          <view class="counter-btn" catchtap="onDecrease">-</view>
+          <view class="counter-num">{{tripForm.travelers || 1}}</view>
+          <view class="counter-btn" catchtap="onIncrease">+</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 4. 出行类型 (Mode Grid) -->
+    <view class="section mb-60">
+      <view class="section-label">
+        <view class="icon-compass"></view> 出行类型 <text class="label-en">MODE</text>
+      </view>
+      <view class="mode-grid">
+        <!-- 旅游 -->
+        <view class="mode-card {{tripForm.type === 'tourism' ? 'active' : ''}}" catchtap="selectMode" data-mode="tourism">
+          <view class="mode-icon {{tripForm.type === 'tourism' ? 'icon-tourism-white' : 'icon-tourism'}}"></view>
+          <text class="mode-text">旅游</text>
+        </view>
+        <!-- 商务 -->
+        <view class="mode-card {{tripForm.type === 'business' ? 'active' : ''}}" catchtap="selectMode" data-mode="business">
+          <view class="mode-icon icon-business"></view>
+          <text class="mode-text">商务</text>
+        </view>
+        <!-- 探亲 -->
+        <view class="mode-card {{tripForm.type === 'family' ? 'active' : ''}}" catchtap="selectMode" data-mode="family">
+          <view class="mode-icon icon-family"></view>
+          <text class="mode-text">探亲</text>
+        </view>
+        <!-- 其他 -->
+        <view class="mode-card {{tripForm.type === 'other' ? 'active' : ''}}" catchtap="selectMode" data-mode="other">
+          <view class="mode-icon icon-other"></view>
+          <text class="mode-text">其他</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 5. 行程模板 (Ticket Style) -->
+    <view class="section mb-60">
+      <view class="section-label">
+        <view class="icon-template"></view> 行程模板 <text class="label-en">TEMPLATE</text>
+      </view>
+      <picker 
+        mode="selector" 
+        range="{{templates}}" 
+        range-key="displayName"
+        value="{{templateIndex}}"
+        bindchange="handleTemplateChange"
+        disabled="{{templates.length === 0}}"
+      >
+        <view class="template-ticket">
+          <view class="ticket-bg-pattern"></view>
+          <view class="ticket-content">
+            <view>
+              <view class="sub-label">已选方案 <text class="sub-en">SELECTED</text></view>
+              <view class="ticket-value">{{selectedTemplate ? (selectedTemplate.displayName || selectedTemplate.name) : (templates.length > 0 ? '选择行程模板' : '暂无可用模板')}}</view>
+            </view>
+            <view class="ticket-icon-wrap">
+              <view class="icon-sliders"></view>
+            </view>
+          </view>
+        </view>
+      </picker>
+      
+      <!-- 模板物品预览 -->
+      <view wx:if="{{selectedTemplate && templateItems.length > 0}}" class="template-preview-section">
+        <view class="template-items-count">包含 {{templateItems.length}} 个物品</view>
+        <view class="template-items-preview">
+          <view 
+            class="template-item-preview"
+            wx:for="{{templateItemsPreview}}" 
+            wx:key="id"
+          >
+            <text class="item-icon">✓</text>
+            <text class="item-name">{{item.name}}</text>
+          </view>
+          <view wx:if="{{templateItems.length > 10}}" class="template-items-more">
+            还有 {{templateItems.length - 10}} 个物品...
+          </view>
+        </view>
+        <view class="template-items-tip">
+          <text>💡 创建行程后，这些物品将自动添加到物品清单中，可邀请好友一起查验</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 6. 输入区域 -->
+    <view class="input-stack mb-100">
+      <view class="text-card">
+        <view class="card-icon icon-file"></view>
+        <textarea 
+          class="clean-textarea" 
+          placeholder="行程描述：例如具体的会议时间、想去的景点..." 
+          value="{{tripForm.description}}"
+          bindinput="onDescriptionInput"
+          maxlength="200"
+        />
+      </view>
+      <view class="text-card">
+        <view class="card-icon icon-heart"></view>
+        <textarea 
+          class="clean-textarea" 
+          placeholder="特殊需求：例如需要婴儿车、晕车药、过敏源..." 
+          value="{{tripForm.specialNeeds}}"
+          bindinput="onSpecialNeedsInput"
+          maxlength="200"
+        />
+      </view>
+    </view>
+
+    <!-- 城市图片 -->
+    <view wx:if="{{cityPictureUrl || loadingPicture || pictureError}}" class="section mb-60">
+      <view class="section-label">
+        <view class="icon-pin"></view> 城市图片 <text class="label-en">PICTURE</text>
+      </view>
+      <view wx:if="{{loadingPicture}}" class="picture-loading-card">
+        <text>正在加载城市图片...</text>
+      </view>
+      <view wx:elif="{{cityPictureUrl}}" class="picture-card-new">
+        <view class="picture-wrapper-new" bindtap="previewCityPicture">
+          <image 
+            class="city-picture-new" 
+            src="{{cityPictureUrl}}" 
+            mode="aspectFill" 
+            binderror="handlePictureError"
+          />
+        </view>
+        <view wx:if="{{cityPictureList.length > 1}}" class="picture-thumbnails-new">
+          <image 
+            wx:for="{{cityPictureList}}" 
+            wx:key="*this" 
+            class="thumbnail-new {{item === cityPictureUrl ? 'active' : ''}}" 
+            src="{{item}}" 
+            mode="aspectFill"
+            data-url="{{item}}"
+            bindtap="switchCityPicture"
+          />
+        </view>
+        <view class="picture-actions">
+          <text>{{tripForm.destination || '未选择目的地'}}</text>
+          <button class="refresh-btn" bindtap="refreshCityPicture">重新生成</button>
+        </view>
+      </view>
+      <view wx:elif="{{pictureError}}" class="picture-error-card">
+        <text>{{pictureError}}</text>
+        <button class="refresh-btn" bindtap="refreshCityPicture">重新尝试</button>
+      </view>
+    </view>
+
+    <!-- 天气预报 -->
+    <view wx:if="{{weatherForecast30d || loadingWeather}}" class="section mb-60">
+      <view class="section-label">
+        <view class="icon-pin"></view> 目的地天气 <text class="label-en">WEATHER</text>
+      </view>
+      <view wx:if="{{loadingWeather}}" class="weather-loading-card">
+        <text>加载天气信息中...</text>
+      </view>
+      <view wx:elif="{{weatherForecast30d && weatherForecast30d.forecast && weatherForecast30d.forecast.length > 0}}" class="weather-content-new">
+        <view class="weather-city-new">{{weatherForecast30d.city}}</view>
+        <scroll-view class="weather-forecast-new" scroll-x="true">
+          <view class="forecast-list-new">
+            <view 
+              class="forecast-item-new {{item.isInTripRange ? 'is-trip-date' : ''}}"
+              wx:for="{{weatherForecast30d.forecast}}" 
+              wx:for-index="idx"
+              wx:key="date"
+            >
+              <text class="forecast-date-new">{{item.formattedDate}}</text>
+              <view class="forecast-info-new">
+                <view class="forecast-icons-new">
+                  <image wx:if="{{item.iconDay}}" class="forecast-icon-new" src="{{item.iconDay}}" mode="aspectFit" data-index="{{idx}}" binderror="handleWeatherIconError" />
+                </view>
+                <view class="forecast-temp-new">
+                  <text class="temp-max-new">{{item.tempMax}}°</text>
+                  <text class="temp-min-new">/ {{item.tempMin}}°</text>
+                </view>
+                <view class="forecast-text-new">{{item.textDay}}</view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+      <view wx:elif="{{weatherError}}" class="weather-error-card">
+        <text>⚠️ {{weatherError}}</text>
+      </view>
+    </view>
+    
+    <!-- 底部占位，防止内容被按钮挡住 -->
+    <view style="height: 180rpx;"></view>
+  </view>
+
+  <!-- 7. 悬浮启动按钮 (AI Launch Button) -->
+  <view class="bottom-floater">
+    <button class="launch-btn" hover-class="launch-btn-hover" loading="{{loading}}" bindtap="handleCreate">
+      <view class="btn-left">
+        <view class="ai-tag">COOPERATIVE</view>
+        <view class="btn-title">创建合作行程</view>
+      </view>
+      <view class="icon-arrow-right"></view>
+    </button>
+  </view>
+
+  <!-- 城市选择弹窗 -->
+  <view wx:if="{{cityDialogVisible}}" class="city-dialog-mask" bindtap="confirmSelectCity">
+    <view class="city-dialog" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text class="dialog-title">选择目的地城市</text>
+        <text class="dialog-close" bindtap="confirmSelectCity">×</text>
+      </view>
+      <view class="dialog-content">
+        <view wx:if="{{cityLoading}}" class="loading-state">
+          <text>加载城市列表...</text>
+        </view>
+        <view wx:else>
+          <view 
+            class="city-item {{selectedCityId === item.id ? 'selected' : ''}}" 
+            wx:for="{{cityList}}" 
+            wx:key="id"
+            bindtap="handleSelectCityRow"
+            data-city="{{item}}"
+            data-id="{{item.id}}"
+          >
+            <text class="city-name">{{item.name}}</text>
+            <text class="city-region">{{item.adm1 || ''}}{{item.adm1 && item.adm2 ? '·' : ''}}{{item.adm2 || ''}}</text>
+            <!-- <text wx:if="{{selectedCityId === item.id}}" class="city-selected-icon">✓</text> -->
+          </view>
+          <view wx:if="{{cityList.length === 0}}" class="empty-state">
+            <text>暂无数据</text>
+          </view>
+        </view>
+      </view>
+      <view class="dialog-footer">
+        <button class="dialog-btn" bindtap="closeCityDialog">取消</button>
+        <button class="dialog-btn primary" bindtap="confirmSelectCity" disabled="{{!selectedCityId}}">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

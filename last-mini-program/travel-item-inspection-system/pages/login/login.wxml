@@ -1,0 +1,68 @@
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <view class="login-form">
+    <view class="form-header">
+      <view class="logo">📦</view>
+      <text class="title">出行必带</text>
+      <text class="subtitle">智能推荐，让出行更安心</text>
+    </view>
+    
+    <view class="form-content">
+      <view class="form-item">
+        <input 
+          class="form-input" 
+          type="text" 
+          placeholder="请输入手机号/邮箱"
+          value="{{username}}"
+          bindinput="onUsernameInput"
+        />
+      </view>
+      
+      <view class="form-item">
+        <input 
+          class="form-input" 
+          type="password" 
+          placeholder="请输入密码"
+          password
+          value="{{password}}"
+          bindinput="onPasswordInput"
+        />
+      </view>
+      
+      <view class="form-options">
+        <checkbox-group bindchange="onRememberMeChange">
+          <label class="checkbox-label">
+            <checkbox value="remember" checked="{{rememberMe}}" />
+            <text>记住我</text>
+          </label>
+        </checkbox-group>
+        <text class="link-text" bindtap="forgotPassword">忘记密码？</text>
+      </view>
+      
+      <button 
+        class="btn-primary login-btn" 
+        type="primary"
+        loading="{{loading}}"
+        bindtap="handleLogin"
+      >
+        登录
+      </button>
+      
+      <view class="login-divider">
+        <text>其他登录方式</text>
+      </view>
+      
+      <view class="social-login">
+        <button class="social-btn" bindtap="wechatLogin">
+          <text class="social-icon">💬</text>
+        </button>
+      </view>
+      
+      <view class="register-link">
+        <text>还没有账号？</text>
+        <text class="link-text" bindtap="goToRegister">立即注册</text>
+      </view>
+    </view>
+  </view>
+</view>
+

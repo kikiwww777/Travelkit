@@ -1,0 +1,486 @@
+<!--pages/trip-templates/trip-templates.wxml-->
+<view class="template-container">
+
+  
+
+  <!-- 1. 顶部导航与 Header (固定顶部) -->
+
+  <view class="header-section">
+
+    <!-- 顶部状态栏占位 -->
+
+    <view style="height: {{statusBarHeight}}px;"></view>
+
+    
+
+    <!-- 导航栏 -->
+
+    <view class="nav-bar">
+
+      <view class="nav-left" bindtap="goBack">
+
+        <image class="icon-chevron-left" src="{{iconChevronLeft}}" />
+
+      </view>
+
+      <text class="nav-title">行程模板库</text>
+
+      <view class="nav-right"></view>
+
+    </view>
+
+
+
+    <!-- Hero 卡片 (创建蓝图) -->
+
+    <view class="hero-card">
+
+      <view class="hero-bg-blur"></view>
+
+      <view class="hero-content">
+
+        <view class="hero-text">
+
+          <text class="hero-title">创建你的旅行蓝图</text>
+
+          <text class="hero-desc">复用常用清单，一键生成行程</text>
+
+        </view>
+
+        <view class="hero-btn" bindtap="openTemplateEditor">
+
+          <image class="icon-plus-sm" src="{{iconPlusSm}}" />
+
+          <text>新建模板</text>
+
+        </view>
+
+      </view>
+
+    </view>
+
+
+
+    <!-- Tabs 切换 -->
+
+    <view class="tabs-bar">
+
+      <view class="tab-item {{activeTab === 'mine' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="mine">
+
+        我的模板 ({{myTemplates.length}})
+
+      </view>
+
+      <view class="tab-item {{activeTab === 'public' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="public">
+
+        公共模板 ({{publicTemplates.length}})
+
+      </view>
+
+    </view>
+
+  </view>
+
+
+
+  <!-- 2. 列表内容区域 (滚动) -->
+
+  <scroll-view scroll-y class="list-scroll" enable-flex>
+
+    <view class="list-content">
+
+      
+
+      <!-- 列表渲染 -->
+
+      <block wx:if="{{displayTemplates.length > 0}}">
+
+        <block wx:for="{{displayTemplates}}" wx:key="id">
+
+          <view class="template-card">
+
+            <!-- 头部：标题与操作 -->
+
+            <view class="card-header">
+
+              <view class="header-info">
+
+                <view class="title-row">
+
+                  <text class="card-title">{{item.name}}</text>
+
+                  <view class="status-badge {{item.isPublic ? 'badge-public' : 'badge-private'}}">
+
+                    {{item.isPublic ? '公开' : '私有'}}
+
+                  </view>
+
+                </view>
+
+                <text class="card-desc">{{item.description || '暂无描述信息...'}}</text>
+
+              </view>
+
+              
+
+              <!-- 仅"我的模板"显示操作按钮 -->
+
+              <view class="card-actions" wx:if="{{activeTab === 'mine'}}">
+
+                <view class="action-btn-circle" bindtap="editTemplate" data-id="{{item.id}}">
+
+                  <image class="action-icon" src="{{iconPen}}" />
+
+                </view>
+
+                <view class="action-btn-circle btn-danger" bindtap="deleteTemplate" data-id="{{item.id}}">
+
+                  <image class="action-icon" src="{{iconTrash}}" />
+
+                </view>
+
+              </view>
+
+            </view>
+
+
+
+            <!-- 标签行 -->
+
+            <view class="tags-row">
+
+              <view class="meta-tag">
+
+                <image class="tag-icon" src="{{iconMapPin}}" mode="aspectFit" /> {{item.destination || '通用'}}
+
+              </view>
+
+              <view class="meta-tag">
+
+                <image class="tag-icon" src="{{iconClock}}" mode="aspectFit" /> {{item.duration}} 天
+
+              </view>
+
+              <block wx:for="{{item.tags}}" wx:for-item="tag" wx:for-index="tagIdx" wx:key="tagIdx">
+                <view wx:if="{{tag}}" class="hash-tag">#{{tag}}</view>
+              </block>
+
+            </view>
+
+
+
+            <!-- 底部状态行 -->
+
+            <view class="card-footer">
+
+              <view class="footer-left">
+
+                <view class="status-text {{item.status === 'approved' ? 'text-green' : (item.status === 'rejected' ? 'text-red' : 'text-amber')}}">
+
+                  <image class="status-icon" src="{{item.status === 'approved' ? iconCheckCircle : (item.status === 'rejected' ? iconAlert : iconClockSm)}}" />
+
+                  {{item.status === 'approved' ? '审核通过' : (item.status === 'rejected' ? '已拒绝' : '审核中')}}
+
+                </view>
+
+                <text class="dot">•</text>
+
+                <text class="count-text">{{item.itemCount}} 个物品</text>
+
+              </view>
+
+              
+
+              <view class="footer-right" wx:if="{{activeTab !== 'mine'}}">
+
+                <text class="author-text text-blue">{{item.author === 'official' ? '官方推荐' : '达人分享'}}</text>
+
+              </view>
+
+            </view>
+
+          </view>
+
+        </block>
+
+      </block>
+
+
+
+      <!-- 空状态 -->
+
+      <view wx:else class="empty-state">
+
+        <image class="empty-icon" src="{{iconLayout}}" />
+
+        <text class="empty-text">暂无相关模板</text>
+
+      </view>
+
+
+
+      <view style="height: 100rpx;"></view>
+
+    </view>
+
+  </scroll-view>
+
+
+
+  <!-- 3. 模板编辑器弹窗 (Template Editor Modal) -->
+
+  <view class="modal-mask" wx:if="{{isEditorOpen}}" bindtap="closeEditor"></view>
+
+  <view class="editor-panel {{isEditorOpen ? 'slide-up' : ''}}" wx:if="{{isEditorOpen}}">
+
+    
+
+    <!-- 弹窗 Header -->
+
+    <view class="editor-header">
+
+      <view class="editor-cancel" bindtap="closeEditor">取消</view>
+
+      <text class="editor-title">{{editingId ? '编辑模板' : '新建模板'}}</text>
+
+      <view class="editor-save" bindtap="saveTemplate">保存</view>
+
+    </view>
+
+
+
+    <scroll-view scroll-y class="editor-scroll">
+
+      <view class="editor-body">
+
+        
+
+        <!-- 表单字段 -->
+
+        <view class="form-section">
+
+          <view class="form-item">
+
+            <text class="form-label">模板名称 *</text>
+
+            <input class="form-input" placeholder="如：日本7日深度游" value="{{formData.name}}" bindinput="onInputName" />
+
+          </view>
+
+
+
+          <view class="form-row">
+
+            <view class="form-item flex-1">
+
+              <text class="form-label">目的地</text>
+
+              <input class="form-input" placeholder="可选" value="{{formData.destination}}" bindinput="onInputDest" />
+
+            </view>
+
+            <view class="form-item w-24">
+
+              <text class="form-label">天数</text>
+
+              <input class="form-input" type="number" value="{{formData.duration}}" bindinput="onInputDuration" />
+
+            </view>
+
+          </view>
+
+
+
+          <view class="form-item">
+
+            <text class="form-label">类型</text>
+
+            <view class="type-grid">
+
+              <block wx:for="{{tripTypes}}" wx:key="value">
+
+                <view 
+
+                  class="type-btn {{formData.type === item.value ? 'type-active' : ''}}"
+
+                  bindtap="selectType" 
+
+                  data-value="{{item.value}}"
+
+                >
+
+                  {{item.label}}
+
+                </view>
+
+              </block>
+
+            </view>
+
+          </view>
+
+
+
+          <view class="form-item">
+
+            <text class="form-label">描述</text>
+
+            <textarea class="form-textarea" placeholder="简要描述行程亮点..." value="{{formData.description}}" bindinput="onInputDesc" maxlength="200" />
+
+          </view>
+
+
+
+          <!-- 设为公开开关 -->
+
+          <view class="switch-row">
+
+            <text class="switch-label">设为公开模板</text>
+
+            <view class="switch-track {{formData.isPublic ? 'switch-on' : 'switch-off'}}" bindtap="togglePublic">
+
+              <view class="switch-thumb"></view>
+
+            </view>
+
+          </view>
+
+        </view>
+
+
+
+        <!-- 物品添加区域 -->
+
+        <view class="items-section">
+
+          <view class="items-header">
+
+            <text class="form-label">包含物品</text>
+
+            <view class="items-count-badge">已选 {{selectedItemOverviewIds.length}} 个</view>
+
+          </view>
+
+          <!-- 已选物品列表 -->
+
+          <view wx:if="{{newTemplateItems.length > 0}}" class="selected-items-preview">
+
+            <view class="selected-item-tag" wx:for="{{newTemplateItems}}" wx:key="itemOverviewId">
+
+              <text class="selected-item-name">{{item.name}}</text>
+
+              <view class="remove-item-btn" bindtap="removeItem" data-id="{{item.itemOverviewId}}">×</view>
+
+            </view>
+
+          </view>
+
+          <!-- 添加物品按钮 -->
+
+          <view class="add-items-box" bindtap="openItemSelector">
+
+            <image class="icon-plus-lg" src="{{iconPlusLg}}" />
+
+            <text>点击添加物品</text>
+
+          </view>
+
+        </view>
+
+
+
+        <view style="height: 60rpx;"></view>
+
+      </view>
+
+    </scroll-view>
+
+  </view>
+
+
+
+  <!-- 4. 物品选择弹窗 (Item Selector Dialog - 旧版弹窗，用于物品选择) -->
+  <view wx:if="{{showCreateDialog}}" class="dialog-mask">
+    <view class="dialog-body" catchtap="stopPropagation">
+      <view class="dialog-header">
+        <text>选择物品</text>
+        <text class="dialog-close" bindtap="closeCreateDialog">×</text>
+      </view>
+      <view class="dialog-content">
+        
+        <!-- 筛选栏 -->
+        <view class="filter-bar">
+          <picker 
+            class="filter-picker" 
+            mode="selector" 
+            range="{{categoryOptionsForAdd}}" 
+            range-key="label"
+            value="{{categoryIndexForAdd}}"
+            bindchange="handleItemOverviewCategoryFilter"
+          >
+            <view class="picker-text">
+              {{selectedCategoryLabel}}
+            </view>
+          </picker>
+          
+          <input 
+            class="filter-input" 
+            placeholder="搜索物品名称" 
+            value="{{itemOverviewFilter.keyword}}"
+            data-field="keyword"
+            bindinput="handleItemOverviewFilter"
+          />
+          
+          <button class="reset-btn" size="mini" bindtap="resetItemOverviewFilter">重置</button>
+        </view>
+
+        <!-- 物品列表（从 item-overview 选择） -->
+        <view class="item-selection-section">
+          <view wx:if="{{loadingItems}}" class="loading-tip">加载中...</view>
+          <view wx:elif="{{filteredItemOverviews.length === 0}}" class="empty-tip">暂无物品数据</view>
+          <view wx:else class="item-list">
+            <checkbox-group bindchange="handleItemCheckboxChange">
+              <view 
+                class="item-card {{item.checked ? 'checked' : ''}}" 
+                wx:for="{{filteredItemOverviews}}" 
+                wx:key="id"
+              >
+                <view class="item-header">
+                  <label class="checkbox-label">
+                    <checkbox 
+                      value="{{item.itemOverviewId || item.id}}" 
+                      checked="{{item.checked}}" 
+                    />
+                    <text class="item-name">{{item.name}}</text>
+                  </label>
+                </view>
+                
+                <view class="item-content">
+                  <text class="item-category">{{item.categoryText}}</text>
+                  <text wx:if="{{item.description}}" class="item-description">{{item.description}}</text>
+                </view>
+              </view>
+            </checkbox-group>
+          </view>
+        </view>
+
+        <!-- 已选中的物品列表 -->
+        <view wx:if="{{newTemplateItems.length > 0}}" class="selected-items-section">
+          <view class="selected-items-header">
+            <text>已选中的物品（{{newTemplateItems.length}} 个）</text>
+          </view>
+          <view class="selected-items-list">
+            <view class="selected-item-tag" wx:for="{{newTemplateItems}}" wx:key="itemOverviewId">
+              <text class="selected-item-name">{{item.name}}</text>
+              <text class="selected-item-category">{{item.categoryText}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="dialog-footer">
+        <button size="mini" bindtap="closeCreateDialog">完成</button>
+      </view>
+    </view>
+  </view>
+
+</view>

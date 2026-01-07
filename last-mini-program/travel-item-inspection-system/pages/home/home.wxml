@@ -1,0 +1,81 @@
+<!--pages/home/home.wxml-->
+<view class="home-container">
+  <!-- 欢迎横幅 -->
+  <view class="welcome-banner">
+    <view class="banner-content">
+      <view class="banner-text">
+        <text class="banner-title">出行必带物品查验系统</text>
+        <text class="banner-subtitle">智能推荐、一键查验，让出行更安心</text>
+        <button class="banner-btn" type="primary" bindtap="createTrip">创建新行程</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能特色 -->
+  <view class="features">
+    <view class="feature-card">
+      <view class="feature-icon">🧠</view>
+      <text class="feature-title">智能推荐</text>
+      <text class="feature-desc">根据目的地天气、季节、活动类型智能推荐必备物品</text>
+    </view>
+    <view class="feature-card">
+      <view class="feature-icon">✓</view>
+      <text class="feature-title">一键查验</text>
+      <text class="feature-desc">逐项勾选、拍照验证，确保不遗漏任何重要物品</text>
+    </view>
+    <view class="feature-card">
+      <view class="feature-icon">👥</view>
+      <text class="feature-title">协作共享</text>
+      <text class="feature-desc">支持多人协作，与同行者共享行程和查验进度</text>
+    </view>
+  </view>
+
+  <!-- 最近行程 -->
+  <view class="recent-trips">
+    <view class="section-header">
+      <text class="section-title">最近行程</text>
+      <text class="section-more" bindtap="viewAllTrips">查看全部 ></text>
+    </view>
+    <view class="trip-list">
+      <view 
+        class="trip-item" 
+        wx:for="{{recentTrips}}" 
+        wx:key="id"
+        bindtap="viewTrip"
+        data-id="{{item.id}}"
+      >
+        <view class="trip-info">
+          <text class="trip-destination">{{item.destination}}</text>
+          <text class="trip-date">{{item.startDate}} - {{item.endDate}}</text>
+          <text class="trip-status">{{getStatusText(item.status)}}</text>
+        </view>
+        <button class="trip-btn" size="mini" type="primary" catchtap="checkTrip" data-id="{{item.id}}">查验</button>
+      </view>
+      <view wx:if="{{recentTrips.length === 0 && !loading}}" class="empty-state">
+        <text>暂无行程数据</text>
+        <button class="empty-btn" type="primary" bindtap="createTrip">创建第一个行程</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快速操作 -->
+  <view class="quick-actions">
+    <view class="action-card" bindtap="createTrip">
+      <view class="action-icon">➕</view>
+      <text class="action-text">新建行程</text>
+    </view>
+    <view class="action-card" bindtap="viewTemplates">
+      <view class="action-icon">📄</view>
+      <text class="action-text">行程模板</text>
+    </view>
+    <view class="action-card" bindtap="viewStatistics">
+      <view class="action-icon">📊</view>
+      <text class="action-text">统计分析</text>
+    </view>
+    <view class="action-card" bindtap="viewProfile">
+      <view class="action-icon">👤</view>
+      <text class="action-text">个人中心</text>
+    </view>
+  </view>
+</view>
+

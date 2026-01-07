@@ -1,0 +1,35 @@
+<!--pages/statistics/statistics.wxml-->
+<view class="statistics-container">
+  <view class="stats-grid">
+    <view class="stat-card">
+      <text class="stat-number">{{stats.totalTrips}}</text>
+      <text class="stat-label">总行程数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.completedTrips}}</text>
+      <text class="stat-label">已完成</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.totalDays}}</text>
+      <text class="stat-label">出行天数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.totalItems}}</text>
+      <text class="stat-label">总物品数</text>
+    </view>
+  </view>
+
+  <view class="progress-card">
+    <text class="card-title">查验完成率</text>
+    <progress 
+      class="progress-bar" 
+      percent="{{stats.totalItems > 0 ? Math.round((stats.checkedItems / stats.totalItems) * 100) : 0}}" 
+      stroke-width="12"
+      activeColor="#409eff"
+    />
+    <text class="progress-text">
+      {{stats.checkedItems}}/{{stats.totalItems}}
+    </text>
+  </view>
+</view>
+
