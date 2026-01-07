@@ -45,7 +45,7 @@
    - 下载地址：https://dev.mysql.com/downloads/mysql/
    - 确保MySQL服务已启动
 
-2. **JDK 1.8+** 或 **JDK 11+**
+2. **JDK 1.8+** 或 **JDK 11+（最好采用JDK17）**
    - 下载地址：https://www.oracle.com/java/technologies/downloads/
    - 配置JAVA_HOME环境变量
 
@@ -137,7 +137,7 @@ mvn dependency:resolve
 ### 步骤 1：安装基础环境
 
 1. 安装并启动 **MySQL 5.7+ / 8.0+**
-2. 安装 **JDK 8+ / 11+ / 17**，配置 `JAVA_HOME`
+2. 安装 **JDK 8+ / 11+ / 17（最好采用JDK17）**，配置 `JAVA_HOME`
 3. 安装 **Maven 3.6+**
 4. 安装 **微信开发者工具**
 5. （可选）安装 Node.js 16+、Python 3.8+
